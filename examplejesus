@@ -1,0 +1,17 @@
+const loginService = {
+  loginUser() {
+    return axios.post...
+  },
+  otherMethod() {
+    return ''
+  }
+}
+
+export default loginService
+
+
+import loginService from '@path'
+
+loginService.loginUser
+
+import { loginUser, otherMethod } from...
