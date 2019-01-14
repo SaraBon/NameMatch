@@ -72,8 +72,9 @@ class Register extends Component {
         <div className="form-wrap">
           <div>
             <h3>Register below</h3>
-            <p className="">
-              Already have an account? <Link to="/login">Log in here</Link>
+            <p className="">Already have an account?</p>
+            <p className="link">
+              <Link to="/login"> Log in here</Link>
             </p>
             {this.renderErrors()}
           </div>

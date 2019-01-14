@@ -93,28 +93,6 @@ class App extends Component {
     }
   };
 
-  // show the burger menu icon only when a user is logged in
-  renderMenuBtn = () => {
-    if (this.props.state.isAuthenticated) {
-      return (
-        <div className="clickableArea">
-          <div id="menu-icon" onClick={this.toggleMenu}>
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
-        </div>
-      );
-    }
-    // if there is no current user logged in and the menu is open, close the menu
-    else if (!this.props.state.isAuthenticated && this.state.menuIsOpen) {
-      let menu = document.getElementById("menu");
-      menu.classList.remove("isopen");
-      this.setState({ menuIsOpen: false });
-    }
-  };
-
   //toggle between open and hidden state of menu by adding / removing a css class
   toggleMenu = () => {
     let menuIcon = document.getElementById("menu-icon");
@@ -141,11 +119,20 @@ class App extends Component {
 
           <header>
             {this.renderLogBtn()}
-            {this.renderMenuBtn()}
+            <div className="clickableArea">
+              <div id="menu-icon" onClick={this.toggleMenu}>
+                <span />
+                <span />
+                <span />
+                <span />
+              </div>
+            </div>
           </header>
           <Menu toggleMenu={this.toggleMenu} />
           <Switch>
             <Route exact path="/" render={() => <Home />} />
+            <Route exact path="/home" render={() => <Home />} />
+
             <Route
               path="/register"
               render={() => <Register notify={this.notify} />}
