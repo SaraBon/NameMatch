@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-//import ErrorBoundary from "./ErrorBoundary";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -25,16 +24,15 @@ class Board extends Component {
   }
 
   componentDidMount() {
-    // add addEventListener
     document.addEventListener("keydown", this.handleKeyPress);
     document.addEventListener("animationend", this.resetAnimationClass);
-    // if a user is logged in and has a linked friend who has names
-    // calculate the friend's names which the current user hasn't seen yet
+
     this.getNames().then(res => {
       this.setState({ loading: false });
     });
+    // if a user is logged in and has a linked friend who has names
+    // calculate the friend's names which the current user hasn't seen yet
     if (this.props.state.friendsNames.length > 0) {
-      console.log("is auth");
       this.props.calcUnseenNames();
     }
   }
@@ -45,15 +43,12 @@ class Board extends Component {
   }
 
   //get new random names and push them to the name stack
-
   getNames = async () => {
     let namesStackTemp = [...this.state.namesStack];
-    //of the current user,s friend has names on his list which the current user
+    //if the current user's friend has names on his list which the current user
     //has not yes seen, add the first name of the unseen names to the stack
-
     if (this.props.state.isAuthenticated && this.props.state.unseenNames) {
       if (this.props.state.unseenNames.length > 0) {
-        console.log("calc unseen names");
         //get the fist name of the array of unseen friends names
         let unseenName = this.props.state.unseenNames[0];
         //push it into the name stack to be shown to the current user
@@ -69,7 +64,6 @@ class Board extends Component {
     axios
       .get("/names/get")
       .then(res => {
-        console.log(res.data);
         let names = res.data;
         names.forEach(x => {
           namesStackTemp.push(x.name);
@@ -78,9 +72,9 @@ class Board extends Component {
         });
       })
       .catch(err => {
-        console.log(err);
-        this.setState({ error: "Sara, connect to the WiFi..." });
-        return err;
+        this.setState({
+          error: "Error loading names, please check your internet connection."
+        });
       });
   };
 
@@ -94,14 +88,32 @@ class Board extends Component {
   // once the swipe animation has finished, remove the css class to "reset" the style
   resetAnimationClass = () => {
     let nameCard1 = document.getElementById("name1");
-    if (nameCard1.classList.contains("swipedYes")) {
-      nameCard1.classList.remove("swipedYes");
+    if (nameCard1.classList.contains("swiped-yes")) {
+      nameCard1.classList.remove("swiped-yes");
     }
-    if (nameCard1.classList.contains("swipedNo")) {
-      nameCard1.classList.remove("swipedNo");
+    if (nameCard1.classList.contains("swiped-no")) {
+      nameCard1.classList.remove("swiped-no");
     }
   };
 
+  // when user "likes" the name
+  swipedYes = () => {
+    let nameCard1 = document.getElementById("name1");
+    //check if the liked name is a match
+    this.checkForMatch();
+    this.props.addName(this.props.state.user._id, this.state.namesStack[0]);
+    nameCard1.classList.add("swiped-yes");
+    this.removeName();
+  };
+
+  // when user "dislikes" the name
+  swipedNo = () => {
+    let nameCard1 = document.getElementById("name1");
+    nameCard1.classList.add("swiped-no");
+    this.removeName();
+  };
+
+  // check if a like is a match
   checkForMatch = () => {
     if (
       this.props.state.friendsNames.indexOf(this.state.namesStack[0]) !== -1
@@ -109,24 +121,17 @@ class Board extends Component {
       toast.success("It's a match!");
     }
   };
-  // if clicked right arrow, add the current name to the "myNames" list and remove name from stack
-  // also check if the name stack is running out of names and if so, fetch more
+
   handleKeyPress = key => {
-    let nameCard1 = document.getElementById("name1");
     if (key.code === "ArrowRight") {
-      this.checkForMatch();
-      this.props.addName(this.props.state.user._id, this.state.namesStack[0]);
-      nameCard1.classList.add("swipedYes");
-      this.removeName();
+      this.swipedYes();
     }
     if (key.code === "ArrowLeft") {
-      nameCard1.classList.add("swipedNo");
-      this.removeName();
+      this.swipedNo();
     }
 
     //check if the namesStack has less then 2 entries and if so, add new names to it
     if (this.state.namesStack.length <= 2) {
-      //every now and then if isAuthenicated and there are unseennames - call showUnseenFriendsName
       this.getNames();
     }
   };
@@ -134,7 +139,7 @@ class Board extends Component {
   render() {
     return this.state.error ? (
       <div className="content">
-        <div className="cardContainer">
+        <div className="card-container">
           <div className="nameCard" id="name1">
             {this.state.error}
           </div>
@@ -142,7 +147,7 @@ class Board extends Component {
       </div>
     ) : this.state.loading ? (
       <div className="content">
-        <div className="cardContainer">
+        <div className="card-container">
           <div className="nameCard" id="name1">
             Loading...
           </div>
@@ -150,22 +155,23 @@ class Board extends Component {
       </div>
     ) : (
       <div className="content center">
-        <div className="cardContainer">
-          <div className="nameCard" id="name1">
+        <div className="card-container">
+          <div className="name-card" id="name1">
             {this.state.namesStack[0]}
           </div>
-          <div className="nameCard" id="name2">
+          <div className="name-card" id="name2">
             {this.state.namesStack[0]}
           </div>
-          <div className="navigationArrows">
-            <button className="navButton">
+          <div className="navigation-arrows">
+            <button className="nav-button" onClick={this.swipedNo}>
               <FontAwesomeIcon icon="angle-left" />
             </button>
-            <button className="navButton">
+            <button className="nav-button" onClick={this.swipedYes}>
               <FontAwesomeIcon icon="angle-right" />
             </button>
           </div>
         </div>
+        <div className="hint">...use the arrow keys</div>
       </div>
     );
   }

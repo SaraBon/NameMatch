@@ -1,0 +1,38 @@
+@import "./variables";
+
+
+//slide-in menu ----------------------
+#menu {
+  position: absolute;
+  top: 60px;
+  height: calc(100vh - 60px);
+  width: 200px;
+  background-color: #373a47;
+  z-index: 2;
+  transform: translateX(-120%);
+  transition: transform 300ms;
+  &.isopen {
+    transform: none;
+  }
+
+  ul {
+    margin-top: 0px;
+    padding: 0px;
+    color: black;
+    list-style-type: none;
+    text-align: left;
+  }
+
+  li {
+    padding: 30px 0 20px 20px;
+    font-size: 1.5em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+    text-decoration: none;
+    a {
+      text-decoration: none;
+      color: white;
+      text-transform: uppercase;
+      font-size: 0.8em;
+    }
+  }
+}

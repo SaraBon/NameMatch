@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import "./index.scss";
-//import axios from "axios";
 import { getFriendsNames } from "./actions/userActions";
 import { connect } from "react-redux";
-
-//import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class FriendsNames extends Component {
   constructor(props) {

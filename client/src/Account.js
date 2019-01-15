@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import axios from "axios";
 import { connect } from "react-redux";
 import {
+  findUserByCode,
   linkAccounts,
   getFriendsNames,
   calcUnseenNames,
@@ -15,41 +15,20 @@ class Account extends Component {
     this.state = {
       linkUser: ""
     };
-    this.findUserByCode = this.findUserByCode.bind(this);
   }
   onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   };
   onSubmit = e => {
     e.preventDefault();
-
-    console.log("link Code submitted: ");
-    console.log(this.state.linkUser);
-    this.findUserByCode(this.state.linkUser);
+    this.props.findUserByCode(
+      this.state.linkUser,
+      this.props.state.user.name,
+      this.props.state.user._id
+    );
   };
 
-  findUserByCode = linkCode => {
-    //  let currentComponent = this;
-    axios
-      .post("/users/findUserByCode", { linkCode: linkCode })
-      .then(res => {
-        console.log("respose   linkUser  : ");
-        console.log(res.data._id);
-        let userData = {
-          userName: res.data.name,
-          userID: res.data._id,
-          myName: this.props.state.user.name
-        };
-        return userData; //resends the user ID and user name to whom belongs the code
-        //    this.setState({ redirect: true })
-      })
-      .then(res => {
-        console.log(res);
-        this.props.linkAccounts(this.props.state.user._id, res);
-      });
-    //  .catch(err => console.log(err.response.data));
-  };
-
+  //render a different UI depending on if the user is already linked to another user or not
   renderLinkAccount = () => {
     if (this.props.state.user.linkedID) {
       return (
@@ -138,5 +117,11 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { linkAccounts, getFriendsNames, calcUnseenNames, deleteAccount }
+  {
+    findUserByCode,
+    linkAccounts,
+    getFriendsNames,
+    calcUnseenNames,
+    deleteAccount
+  }
 )(Account);

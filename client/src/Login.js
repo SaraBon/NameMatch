@@ -15,7 +15,7 @@ class Login extends Component {
     };
   }
 
-  // clear the errors when the user navigates away from this route
+  // clear the validation errors when the user navigates away from this route
   componentWillUnmount() {
     this.props.clearErrors();
   }
@@ -29,19 +29,18 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password
     };
-    console.log("submitting: ");
-    console.log(userData);
     this.props.loginUser(userData); ///-------------
   };
 
+  // render errors, if there are
   renderErrors = () => {
-    if (this.props.state.errors) {
+    if (this.props.errors.errors) {
       return (
         <div>
-          <p className="error">{this.props.state.errors.email}</p>
-          <p className="error">{this.props.state.errors.password}</p>
-          <p className="error">{this.props.state.errors.emailnotfound}</p>
-          <p className="error">{this.props.state.errors.passwordincorrect}</p>
+          <p className="error">{this.props.errors.errors.email}</p>
+          <p className="error">{this.props.errors.errors.password}</p>
+          <p className="error">{this.props.errors.errors.emailnotfound}</p>
+          <p className="error">{this.props.errors.errors.passwordincorrect}</p>
         </div>
       );
     }
@@ -90,11 +89,12 @@ class Login extends Component {
     );
   }
 }
-//export default Login;
 
 const mapStateToProps = state => ({
-  state: state.auth
+  state: state.auth,
+  errors: state.errors
 });
+
 export default connect(
   mapStateToProps,
   { loginUser, clearErrors }

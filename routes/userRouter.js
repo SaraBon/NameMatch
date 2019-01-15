@@ -1,4 +1,3 @@
-//load dependencies
 const express = require("express");
 var bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
@@ -17,14 +16,11 @@ userRouter.use(bodyParser.json());
 
 // get a user's data
 userRouter.get("/get/:id", (req, res) => {
-  console.log("id: " + req.params.id);
   User.findById(req.params.id, function(err, p) {
     if (!p) {
       return res.status(400).json({ error: "cannot read user" });
       res.send("no such user");
     } else {
-      console.log("sending: ");
-      console.log(p);
       res.send(p);
     }
   });
@@ -96,7 +92,6 @@ userRouter.post("/login", (req, res) => {
             expiresIn: 31556926 // 1 year in seconds
           },
           (err, token) => {
-            console.log("login success");
             res.json({
               success: true,
               token: "Bearer " + token
@@ -118,7 +113,6 @@ userRouter.put("/update/:id", (req, res) => {
     if (err) {
       res.send(err);
     } else {
-      console.log(user.names);
       user.names.push(req.body.name);
       user.save(function(err) {
         if (err) res.send(err);
@@ -134,7 +128,6 @@ userRouter.put("/update/seen/:id", (req, res) => {
     if (err) {
       res.send(err);
     } else {
-      console.log(user.seenFriendsNames);
       user.seenFriendsNames.push(req.body.name);
       user.save(function(err) {
         if (err) res.send(err);
@@ -146,35 +139,15 @@ userRouter.put("/update/seen/:id", (req, res) => {
 
 // delete a name from the user's names list
 userRouter.post("/delete/:id", (req, res) => {
-  console.log("userrouter delete");
-  console.log(req.body);
   User.findById(req.params.id, function(err, user) {
     if (err) {
       return res
         .status(404)
         .json({ error: "Oops, the name was not deleted, please try again" });
-    } else if (req.body.index) {
-      console.log("deleting: " + req.body.index);
+    } else {
       user.names.splice(req.body.index, 1);
       user.save(function(err) {
         if (err) {
-          console.log("save err");
-          console.log(err);
-          return res.status(400).json({
-            error: "Oops, the name was not deleted, please try again"
-          });
-        }
-
-        res.send(user);
-      });
-    } else if (req.body.name) {
-      console.log("deleting: " + req.body.name);
-      let index = user.names.indexOf(req.body.name);
-      user.names.splice(index, 1);
-      user.save(function(err) {
-        if (err) {
-          console.log("save err");
-          console.log(err);
           return res.status(400).json({
             error: "Oops, the name was not deleted, please try again"
           });
@@ -183,36 +156,40 @@ userRouter.post("/delete/:id", (req, res) => {
         res.send(user);
       });
     }
+    //TEMPORARILY DISABLED: delete name by name (not index)
+    // else if (req.body.name) {
+    //   let index = user.names.indexOf(req.body.name);
+    //   user.names.splice(index, 1);
+    //   user.save(function(err) {
+    //     if (err) {
+    //       return res.status(400).json({
+    //         error: "Oops, the name was not deleted, please try again"
+    //       });
+    //     }
+    //
+    //     res.send(user);
+    //   });
+    // }
   });
 });
 
-//
+// find a user by his code
 userRouter.post("/findUserByCode", (req, res) => {
-  console.log("received: ");
-  console.log(req.body);
   User.findOne(req.body, function(err, user) {
     if (!user) {
-      console.log("no such user");
       res.json({ error: "no " });
     } else {
-      console.log("found: ");
-      console.log(user);
       res.send(user);
     }
   });
 });
 
+//link two users by their ID
 userRouter.put("/linkUsers/:id", (req, res) => {
-  console.log("linking users: ");
-  console.log(req.body.name);
-  console.log(req.params.id);
-
   User.findById(req.params.id, function(err, user) {
     if (err) {
-      console.log("not found");
       res.send(err);
     } else {
-      console.log("found 1");
       user.linkedID = req.body.userID;
       user.linkedName = req.body.userName;
       user.save(function(err) {
@@ -224,10 +201,8 @@ userRouter.put("/linkUsers/:id", (req, res) => {
 
   User.findById(req.body.userID, function(err, user) {
     if (err) {
-      console.log("not found");
       res.send(err);
     } else {
-      console.log("found 2");
       user.linkedID = req.params.id;
       user.linkedName = req.body.myName;
 
@@ -239,10 +214,9 @@ userRouter.put("/linkUsers/:id", (req, res) => {
   });
 });
 
+// delete an account
 userRouter.delete("/delete/:id", (req, res) => {
-  console.log("id: " + req.params.id);
   User.deleteOne({ _id: req.params.id }, function(err, p) {
-    console.log("deleteOne");
     return res.json("User deleted");
   });
 });

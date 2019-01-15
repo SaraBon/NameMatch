@@ -1,15 +1,10 @@
-$main_color: #bfe2e2; // #f57075 (red-ish) // #bfe2e2 (blue-ish) // #B4BAD2 purple-ish
-$nav_color: #373a47;
-$accent_color: #b4bad2;
-$accent_color2: white; //#C94E50;
-$text-color: #373a47;
+@import "./styles/variables";
+@import "./styles/hamburger-menu";
+@import "./styles/menu";
+@import "./styles/forms";
+@import "./styles/list_scroll";
 
-$header-height: 60px;
-
-$font-big: 20px;
-$font-medium: 16px;
-$font-small: 12px;
-
+// general css, global components
 body,
 html {
   margin: 0px;
@@ -21,103 +16,10 @@ html {
 
 #root {
   height: 100%;
-  //  overflow: hidden;
 }
 
 #wrapper {
   height: 100%;
-}
-
-header {
-  text-transform: uppercase;
-  font-family: "Sunflower", sans-serif;
-  font-size: $font-medium;
-  background-color: $nav_color;
-  position: fixed;
-  height: $header-height;
-  width: 100%;
-}
-
-.btn {
-  margin: 0px 10px 0px 10px;
-  float: right;
-  background-color: $main-color;
-  border: none;
-  border-radius: 2px;
-  padding: 8px 16px 8px 16px;
-  cursor: pointer;
-  color: $nav_color;
-  font-size: $font-medium;
-  z-index: 3;
-  &.btn-light {
-    background-color: lighten($main-color, 12%);
-  }
-}
-
-a {
-  color: $text-color;
-}
-
-//// Hamburger Menu Icon ----------------------
-.clickableArea {
-  // position: absolute;
-  width: 60px;
-  height: 55px;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-wrap {
-  height: 100%;
-  float: right;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#menu-icon {
-  position: relative;
-  height: 80%;
-  width: 2em;
-  transition: 0.5s ease-in-out;
-  cursor: pointer;
-  font-size: $font-big;
-  span {
-    position: absolute;
-    height: 0.2em;
-    width: 2em;
-    background: $accent_color2;
-    border-radius: 1px;
-    opacity: 1;
-    transform: rotate(0deg);
-    transition: 0.25s ease-in-out;
-  }
-  span:nth-child(1) {
-    top: 0.8em;
-  }
-  span:nth-child(2),
-  span:nth-child(3) {
-    top: 1.2em;
-  }
-
-  span:nth-child(4) {
-    top: 1.6em;
-  }
-
-  &.isopen span:nth-child(1),
-  &.isopen span:nth-child(4) {
-    opacity: 0;
-  }
-
-  &.isopen span:nth-child(2) {
-    transform: rotate(45deg);
-  }
-
-  &.isopen span:nth-child(3) {
-    transform: rotate(-45deg);
-  }
 }
 
 .content {
@@ -131,209 +33,28 @@ a {
     justify-content: center;
   }
 }
-.home {
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  padding: $header-height 100px 0px 100px;
-}
-.nameCard {
-  position: absolute;
-  font-size: 4em;
-  height: 300px;
+
+header {
+  text-transform: uppercase;
+  font-family: "Sunflower", sans-serif;
+  font-size: $font-medium;
+  background-color: $nav_color;
+  position: fixed;
+  height: $header-height;
   width: 100%;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    color: $accent_color2;
-  }
-  &.swipedYes {
-    -webkit-animation: slide-right 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-      both;
-    animation: slide-right 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  }
-  &.swipedNo {
-    -webkit-animation: slide-left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-    animation: slide-left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  }
 }
 
-.cardContainer {
-  position: relative;
-  height: 300px;
-  width: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  //  transform: rotate(5deg);
+h3 {
+  align-self: flex-start;
 }
 
-.navigationArrows {
-  position: absolute;
-  height: 100px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+h1,
+h2,
+h3 {
+  color: $title_color;
 }
 
-.navButton {
-  position: absolute;
-  background: rgba(255, 255, 255, 0);
-  opacity: 1;
-  color: $text-color;
-  border: none;
-  height: 60px;
-  width: 60px;
-  font-size: 4em;
-  &:first-child {
-    left: -60px;
-  }
-  &:last-child {
-    right: -60px;
-  }
-}
-
-@keyframes slide-right {
-  0% {
-    -webkit-transform: rotateY(0);
-    transform: rotateY(0);
-    -webkit-transform-origin: right;
-    transform-origin: right;
-  }
-  100% {
-    -webkit-transform: rotateY(180deg);
-    transform: rotateY(180deg);
-    -webkit-transform-origin: right;
-    transform-origin: right;
-  }
-  // 100% {
-  //   transform: translate(600px, -150px) rotate(-80deg) scale(0.6, 0.6);
-  //   //  background-color: saturate($main_color, 50%);
-  // }
-}
-
-@keyframes slide-left {
-  0% {
-    -webkit-transform: rotateY(0);
-    transform: rotateY(0);
-    -webkit-transform-origin: left bottom;
-    transform-origin: left bottom;
-  }
-  100% {
-    -webkit-transform: rotateY(-180deg);
-    transform: rotateY(-180deg);
-    -webkit-transform-origin: left bottom;
-    transform-origin: left bottom;
-  }
-  // 100% {
-  //   transform: translate(-600px, 50px) rotate(-50deg) scale(0.6, 0.6);
-  //   //  background-color: grayscale($main_color);
-  // }
-}
-
-//slide-in menu ----------------------
-#menu {
-  position: absolute;
-  top: 60px;
-  height: calc(100vh - 60px);
-  width: 200px;
-  background-color: #373a47;
-  z-index: 2;
-  transform: translateX(-120%);
-  transition: transform 300ms;
-  &.isopen {
-    transform: none;
-  }
-
-  ul {
-    margin-top: 0px;
-    padding: 0px;
-    color: black;
-    list-style-type: none;
-    text-align: left;
-  }
-
-  li {
-    padding: 30px 0 20px 20px;
-    font-size: 1.5em;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
-    text-decoration: none;
-    a {
-      text-decoration: none;
-      color: white;
-      text-transform: uppercase;
-      font-size: 0.8em;
-    }
-  }
-}
-
-// Names list ----------------------
-
-.list {
-  height: 80%;
-  //  max-width: 90%;
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  font-size: 1.5em;
-  z-index: 3;
-  list-style: none;
-  padding-inline-start: 0px;
-  overflow-y: scroll;
-
-  li {
-    width: 100%;
-    padding: 0.3em 0.3em;
-    margin-bottom: 0.2em;
-    background-color: lighten($main-color, 12%);
-    font-size: 0.8em;
-    border-bottom: 1px solid lighten($text-color, 40%);
-    //border-radius: 3px;
-    box-shadow: 1px 1px 3px 0px rgba(55, 58, 71, 0.21);
-    position: relative;
-  }
-
-  li:hover {
-    background-color: white;
-  }
-
-  li:hover .actionButton {
-    display: block;
-  }
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  opacity: 0.2;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: rgba(52, 63, 78, 0.3);
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(52, 63, 78, 0.6);
-}
-
-.slide {
-  animation: slide 0.5s linear;
-}
-
-.slideDelete {
-  animation: slideDelete 0.5s linear;
-}
-
-.actionButton {
+.action-button {
   position: absolute;
   right: 1em;
   top: 0.5em;
@@ -344,81 +65,133 @@ a {
   cursor: pointer;
 }
 
-@keyframes slide {
-  100% {
-    transform: translateY(-115%);
+a {
+  color: $text-color;
+}
+
+.btn {
+  margin: 0px 10px 0px 10px;
+  float: right;
+  background-color: $main-color;
+  border: none;
+  border-radius: 2px;
+  padding: 8px 16px 8px 16px;
+  cursor: pointer;
+  color: $nav_color;
+  font-size: $font-medium;
+  &.btn-light {
+    background-color: lighten($main-color, 12%);
   }
 }
 
-@keyframes slideDelete {
+// inner containers
+.home {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: $header-height 100px 0px 100px;
+}
+.info {
+  padding: $header-height 50px 0px 50px;
+}
+.name-card {
+  position: absolute;
+  font-size: 4em;
+  height: 300px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    color: $accent_color;
+  }
+  &.swiped-yes {
+    -webkit-animation: slide-right 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+      both;
+    animation: slide-right 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+  &.swiped-no {
+    -webkit-animation: slide-left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    animation: slide-left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+}
+
+.card-container {
+  position: relative;
+  height: 300px;
+  width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigation-arrows {
+  position: absolute;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-button {
+  position: absolute;
+  background: rgba(255, 255, 255, 0);
+  opacity: 1;
+  color: $text-color;
+  border: none;
+  height: 60px;
+  width: 60px;
+  font-size: 4em;
+  cursor: pointer;
+  &:first-child {
+    left: -60px;
+  }
+  &:last-child {
+    right: -60px;
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    -webkit-transform: translateX(0) rotate(0deg);
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
   100% {
-    //transform: translateY(-115%)  ;
+    -webkit-transform: translateX(100px) rotate(90deg);
+    transform: translateX(100px) rotate(90deg);
     opacity: 0;
   }
 }
 
-// Forms ---------------------------------------------------------
-.form-wrap {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-
-  input {
-    display: block;
-    width: 100%;
-    margin: 4px 0px 16px 0px;
-    border: none;
-    height: 2em;
-    background-color: lighten($main-color, 12%);
-    padding: 3px;
+@keyframes slide-left {
+  0% {
+    -webkit-transform: translateX(0) rotate(0deg);
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
   }
-
-  label {
-    font-size: $font-small;
+  100% {
+    -webkit-transform: translateX(-100px) rotate(-90deg);
+    transform: translateX(-100px) rotate(-90deg);
+    opacity: 0;
   }
-
-  button {
-    margin-right: 0px;
-  }
-
-  div {
-    margin-top: 1em;
-  }
-}
-
-.error {
-  color: red;
-  font-style: italic;
-  font-size: $font-small;
-}
-
-h3 {
-  align-self: flex-start;
-}
-
-h1,
-h2,
-h3 {
-  color: #f57075;
 }
 
 .code {
   font-size: 1.2em;
 }
 
+// demo / home page
 #myVideo {
   width: 200px;
-  //  height: 400px;
 }
 
 .demo-text,
 .demo-video {
   margin: 30px;
 }
-
-// .demo-text {
-//   min-width: 400px;
-// }
 
 @media screen and (max-width: 450px) {
   .demo-text {
@@ -436,4 +209,27 @@ h3 {
   .home {
     padding: $header-height 20px 0px 20px;
   }
+  .nav-button {
+    &:first-child {
+      left: 60px;
+      top: 90px;
+    }
+    &:last-child {
+      right: 60px;
+      top: 90px;
+    }
+  }
+}
+
+// notifications
+.hint {
+  text-align: right;
+  font-style: italic;
+  padding-left: 150px;
+}
+
+.error {
+  color: red;
+  font-style: italic;
+  font-size: $font-small;
 }

@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
 
 import { connect } from "react-redux";
-import { registerUser } from "./actions/userActions";
-import { clearErrors } from "./actions/userActions";
+import { registerUser, clearErrors } from "./actions/userActions";
 
 class Register extends Component {
   constructor() {
@@ -20,6 +17,7 @@ class Register extends Component {
     };
   }
 
+  // clear the validation errors when the user navigates away from this route
   componentWillUnmount() {
     this.props.clearErrors();
   }
@@ -33,7 +31,7 @@ class Register extends Component {
     const linkCode = Math.random()
       .toString(36)
       .substring(2, 8);
-    // create an object of the new user to pass to the function registerUser
+    // create an object of the new user to pass to the function registerUser()
     const newUser = {
       name: this.state.name,
       email: this.state.email,
@@ -41,18 +39,18 @@ class Register extends Component {
       password2: this.state.password2,
       linkCode: linkCode
     };
-    console.log(newUser);
     this.props.registerUser(newUser);
   };
 
+  // render errors, if there are
   renderErrors = () => {
-    if (this.props.state.errors) {
+    if (this.props.errors.errors) {
       return (
         <div>
-          <p className="error">{this.props.state.errors.name}</p>
-          <p className="error">{this.props.state.errors.email}</p>
-          <p className="error">{this.props.state.errors.password}</p>
-          <p className="error">{this.props.state.errors.password2}</p>
+          <p className="error">{this.props.errors.errors.name}</p>
+          <p className="error">{this.props.errors.errors.email}</p>
+          <p className="error">{this.props.errors.errors.password}</p>
+          <p className="error">{this.props.errors.errors.password2}</p>
         </div>
       );
     }
@@ -62,10 +60,6 @@ class Register extends Component {
     if (this.props.state.registration_success) {
       return <Redirect to="/login" />;
     }
-
-    // if (this.props.state.errors) {
-    //   this.props.notify();
-    // }
 
     return (
       <div className="content">
@@ -130,7 +124,8 @@ class Register extends Component {
   }
 }
 const mapStateToProps = state => ({
-  state: state.auth
+  state: state.auth,
+  errors: state.errors
 });
 export default connect(
   mapStateToProps,

@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import "./index.scss";
-import jwt_decode from "jwt-decode";
 
 //Redux
 import { connect } from "react-redux";
-import { setCurrentUser, logoutUser } from "./actions/userActions";
-import store from "./store";
+import { logoutUser } from "./actions/userActions";
 
 //Components
 import Home from "./Home";
@@ -18,39 +16,10 @@ import MyNames from "./MyNames";
 import FriendsNames from "./FriendsNames";
 import Matches from "./Matches";
 import Account from "./Account";
-import setAuthToken from "./utils/setAuthToken";
-import axios from "axios";
+import Info from "./Info";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-// // Check for token to keep user logged in
-// if (localStorage.jwtToken) {
-//   // Set auth token header auth
-//   const token = localStorage.jwtToken;
-//   setAuthToken(token);
-//   // Decode token and get user info and exp
-//   const decoded = jwt_decode(token);
-//   // Set user and isAuthenticated
-//   axios.get(`/users/get/${decoded._id}`).then(res => {
-//     console.log("full user data: ");
-//     console.log(res.data);
-//
-//     let userData = res.data;
-//
-//     // if the user has a friend linked, get the friend's data
-//     store.dispatch(setCurrentUser(userData));
-//   });
-//   //  store.dispatch(setCurrentUser(decoded));
-//   // Check for expired token
-//   const currentTime = Date.now() / 1000; // to get in milliseconds
-//   if (decoded.exp < currentTime) {
-//     // Logout user
-//     store.dispatch(logoutUser());
-//     // Redirect to login
-//     //window.location.href = "./login"; ------------------------------------------------------------
-//   }
-// }
 
 class App extends Component {
   constructor(props) {
@@ -60,10 +29,7 @@ class App extends Component {
     };
   }
 
-  // notify = () => {
-  //   toast.success("Name field is required!");
-  // };
-
+  //depending on if a user is logged in or not, render different buttons
   renderLogBtn = () => {
     let logout = (
       <div className="btn-wrap">
@@ -98,8 +64,6 @@ class App extends Component {
     let menuIcon = document.getElementById("menu-icon");
     let menu = document.getElementById("menu");
 
-    console.log(this.props);
-
     if (!this.state.menuIsOpen) {
       menuIcon.classList.add("isopen");
       menu.classList.add("isopen");
@@ -116,10 +80,9 @@ class App extends Component {
       <Router>
         <div id="wrapper">
           <ToastContainer />
-
           <header>
             {this.renderLogBtn()}
-            <div className="clickableArea">
+            <div className="clickable-area">
               <div id="menu-icon" onClick={this.toggleMenu}>
                 <span />
                 <span />
@@ -132,17 +95,14 @@ class App extends Component {
           <Switch>
             <Route exact path="/" render={() => <Home />} />
             <Route exact path="/home" render={() => <Home />} />
-
-            <Route
-              path="/register"
-              render={() => <Register notify={this.notify} />}
-            />
+            <Route path="/register" render={() => <Register />} />
             <Route path="/login" render={() => <Login />} />
             <Route path="/Board" render={() => <Board />} />
             <Route path="/MyNames" render={() => <MyNames />} />
             <Route path="/FriendsNames" render={() => <FriendsNames />} />
             <Route path="/Matches" render={() => <Matches />} />
             <Route path="/Account" render={() => <Account />} />
+            <Route path="/Info" render={() => <Info />} />
             <Route
               path=""
               render={() => (

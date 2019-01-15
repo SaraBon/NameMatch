@@ -10,6 +10,7 @@ class Menu extends Component {
     this.state = {};
   }
 
+  // render names list only if user logged in
   renderMyNames = () => {
     if (this.props.state.isAuthenticated) {
       return (
@@ -28,24 +29,7 @@ class Menu extends Component {
     }
   };
 
-  renderFriendsNames = () => {
-    if (this.props.state.isAuthenticated && this.props.state.user.linkedID) {
-      return (
-        <li>
-          <NavLink
-            to="/FriendsNames"
-            activeStyle={{
-              textDecoration: "underline"
-            }}
-            onClick={this.props.toggleMenu}
-          >
-            Friend's Names
-          </NavLink>
-        </li>
-      );
-    }
-  };
-
+  // render matches list only if user logged in & has another user linked
   renderMatches = () => {
     if (this.props.state.isAuthenticated && this.props.state.user.linkedID) {
       return (
@@ -64,6 +48,7 @@ class Menu extends Component {
     }
   };
 
+  // render account only if user logged in
   renderAccount = () => {
     if (this.props.state.isAuthenticated) {
       return (
@@ -110,9 +95,19 @@ class Menu extends Component {
               </NavLink>
             </li>
             {this.renderMyNames()}
-            {this.renderFriendsNames()}
             {this.renderMatches()}
             {this.renderAccount()}
+            <li>
+              <NavLink
+                to="/Info"
+                activeStyle={{
+                  textDecoration: "underline"
+                }}
+                onClick={this.props.toggleMenu}
+              >
+                Info
+              </NavLink>
+            </li>
           </ul>
         </div>
       </div>

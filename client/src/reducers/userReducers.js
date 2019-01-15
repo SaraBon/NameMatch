@@ -1,3 +1,15 @@
+import {
+  CALC_UNSEEN_NAMES,
+  SET_CURRENT_USER,
+  REGISTRATION_SUCCESS,
+  UPDATE_FRIENDS_NAMES,
+  USER_LOADING,
+  UPDATE_NAMES,
+  FIND_MATCHES,
+  UPDATE_SEEN_NAMES,
+  LINK_ACCOUNTS,
+  UPDATE_UNSEEN_NAMES
+} from "../actions/types.js";
 const isEmpty = require("is-empty");
 const initialState = {
   isAuthenticated: false,
@@ -6,72 +18,55 @@ const initialState = {
   friendsNames: [],
   unseenNames: [],
   loading: false,
-  errors: {},
   matches: []
 };
 export default function(state = initialState, action) {
   switch (action.type) {
-    case "SET_CURRENT_USER":
+    case SET_CURRENT_USER:
       return {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload
       };
-    case "VALIDATION_ERROR":
-      return {
-        ...state,
-        errors: action.payload
-      };
-    case "REGISTRATION_SUCCESS":
+
+    case REGISTRATION_SUCCESS:
       return {
         ...state,
         registration_success: true
       };
-    case "CLEAR_ERRORS":
-      return {
-        ...state,
-        errors: action.payload
-      };
 
-    case "USER_LOADING":
+    case USER_LOADING:
       return {
         ...state,
         loading: true
       };
-    case "GET_CURRENT_USER":
-      return {
-        ...state,
-        profile: action.payload,
-        loading: false
-      };
-    case "UPDATE_NAMES":
+
+    case UPDATE_NAMES:
       let tempUsr = Object.assign(state.user);
       tempUsr.names = action.payload;
       return {
         ...state,
         user: tempUsr
       };
-    case "UPDATE_FRIENDS_NAMES":
+
+    case UPDATE_FRIENDS_NAMES:
       return {
         ...state,
         friendsNames: action.payload,
         loading: false
       };
-    case "LINK_ACCOUNTS":
+
+    case LINK_ACCOUNTS:
       let tempUsr2 = Object.assign(state.user);
       tempUsr2.linkedID = action.payload._id;
       tempUsr2.linkedName = action.payload.name;
-      console.log(tempUsr2.linkedName);
-      console.log(action.payload.name);
-
       return {
         ...state,
         loading: false
       };
-    case "CALC_UNSEEN_NAMES":
-      console.log("CALC_UNSEEN_NAMES:");
-      console.log("friendsnames:");
-      console.log(state.friendsNames);
+
+    // calculate the names of the linked user which the current user hasn't seen yet
+    case CALC_UNSEEN_NAMES:
       let friendsNames = state.friendsNames.slice();
       let seenFriendsNames = state.user.seenFriendsNames.slice();
       let myNames = state.user.names.slice();
@@ -79,15 +74,13 @@ export default function(state = initialState, action) {
 
       if (!state.user.seenFriendsNames) {
         // if user has no seen Friends names, put all friends names
-        //which are not already in my list in unseen names
+        //which are not already in the current user's list in the unseen names list
         unseenNames = friendsNames.filter(function(obj) {
           return (
             seenFriendsNames.indexOf(obj) === -1 && myNames.indexOf(obj) === -1
           );
         });
 
-        console.log("unseenNames (no names seen yet)");
-        console.log(unseenNames);
         return {
           ...state,
           unseenNames: unseenNames
@@ -95,43 +88,27 @@ export default function(state = initialState, action) {
       } else {
         // else find all names which the current user hasn't seen yet
         //and does not have on his own list
-
-        console.log("seenFriendsNames:");
-        console.log(state.user.seenFriendsNames);
-
         unseenNames = friendsNames.filter(function(obj) {
           return (
             seenFriendsNames.indexOf(obj) === -1 && myNames.indexOf(obj) === -1
           );
         });
-        console.log("unseenNames");
-        console.log(unseenNames);
         return {
           ...state,
           unseenNames: unseenNames
         };
       }
-    case "UPDATE_SEEN_NAMES":
-      console.log(
-        "reducer UPDATE_SEEN_NAMES = adding the shown name to the array of seen names"
-      );
 
+    case UPDATE_SEEN_NAMES:
       let tempUsr3 = Object.assign(state.user);
       tempUsr3.seenFriendsNames = action.payload;
-      console.log("seenFriendsNames now:");
-      console.log(tempUsr3.seenFriendsNames);
 
       return {
         ...state,
-        user: tempUsr3 ////problem
+        user: tempUsr3
       };
-    case "UPDATE_UNSEEN_NAMES":
-      console.log(
-        "reducer UPDATE_UNSEEN_NAMES = deleting the shown name from the array"
-      );
-      console.log("unseenFriendsNames now:");
 
-      console.log(state.unseenNames);
+    case UPDATE_UNSEEN_NAMES:
       let unseenNames2 = state.unseenNames;
       unseenNames2.splice(0, 1);
 
@@ -139,22 +116,18 @@ export default function(state = initialState, action) {
         ...state,
         unseenNames: unseenNames2
       };
-    case "FIND_MATCHES":
-      console.log("finding matches");
 
-      console.log(state.user.names);
-      console.log(state.friendsNames);
+    case FIND_MATCHES:
       let myNames2 = state.user.names;
       let friendsNames2 = state.friendsNames;
-
       let matches = myNames2.filter(function(obj) {
         return friendsNames2.indexOf(obj) !== -1;
       });
-
       return {
         ...state,
         matches: matches
       };
+
     default:
       return state;
   }

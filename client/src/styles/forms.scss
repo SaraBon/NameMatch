@@ -1,0 +1,28 @@
+@import "./variables";
+
+.form-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+
+  input {
+    display: block;
+    width: 100%;
+    margin: 4px 0px 16px 0px;
+    border: none;
+    height: 2em;
+    background-color: lighten($main-color, 12%);
+    padding: 3px;
+  }
+
+  label {
+    font-size: $font-small;
+  }
+
+  button {
+    margin-right: 0px;
+  }
+  div {
+    margin-top: 1em;
+  }
+}
