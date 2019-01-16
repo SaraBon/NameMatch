@@ -1,3 +1,25 @@
+**See [demo here](https://match-names.herokuapp.com/) **
+
+This is a MERN Stack app.
+
+## Random Baby Name Generator
+- Find your favorite baby name
+- Database of 70.000 international names
+- Easy tinder-like swiping of names
+- Link your account to your partner and find name matches ❤
+
+## Continuous development
+The development of this site started off as a playground / learning project in the context of my self-studies of JavaScript / React. It is an ongoing project and will be continually improved. Some features to be added Q1 2019:
+
+- Selecting the gender of names
+- Selecting the first letter of names
+- Improved management of names & matches
+- Mobile (PWA) & touch interaction
+
+
+
+------------------------------------------------------------------------------------------------------------------
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
