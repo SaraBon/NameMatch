@@ -6,8 +6,6 @@ var bodyParser = require("body-parser");
 const passport = require("passport");
 const path = require("path");
 
-const compression = require("compression");
-
 const app = express();
 
 const port = process.env.PORT || 5000;
@@ -35,7 +33,6 @@ require("./config/passport")(passport);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(compression());
 
 app.use(express.static(path.join(__dirname, "client", "build")));
 
