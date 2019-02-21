@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Swipeable } from "react-swipeable";
+import Swipeable from "react-swipy";
 import { connect } from "react-redux";
 import {
   addName,
@@ -11,10 +11,6 @@ import {
   updateUnseenNames
 } from "./actions/userActions";
 
-let selectedStyle = {
-  backgroundColor: "#798199"
-};
-
 class Board extends Component {
   constructor(props) {
     super(props);
@@ -22,15 +18,7 @@ class Board extends Component {
       namesStack: [],
       unseenFriendsNames: [],
       error: false,
-      loading: true,
-      // for swipe animation & toggle buttons
-      x: 0,
-      rotation: 0,
-      opacity: 1,
-      gender: "all"
-      // girl: false,
-      // both: true,
-      // boy: false
+      loading: true
     };
   }
 
@@ -45,16 +33,8 @@ class Board extends Component {
   }
 
   //get new random names and push them to the name stack
-  getNames = async gender => {
-    let namesStackTemp;
-    // if the function is called because the gender was changed,
-    // the current name stack is emptied, otherwise kept
-    if (gender) {
-      namesStackTemp = [];
-    } else {
-      namesStackTemp = [...this.state.namesStack];
-    }
-
+  getNames = async () => {
+    let namesStackTemp = [...this.state.namesStack];
     //if the current user's friend has names on his list which the current user
     //has not yes seen, add the first name of the unseen names to the stack
     if (this.props.state.isAuthenticated && this.props.state.unseenNames) {
@@ -62,7 +42,7 @@ class Board extends Component {
         //get the fist name of the array of unseen friends names
         let unseenName = this.props.state.unseenNames[0];
         //push it into the name stack to be shown to the current user
-        namesStackTemp.unshift(unseenName);
+        namesStackTemp.push(unseenName);
         //add that name to the database of seen names of the current user
         this.props.addSeenName(this.props.state.user._id, unseenName);
         //remove that name from the store state of unseen names
@@ -72,11 +52,11 @@ class Board extends Component {
 
     //get 6 more names from the database
     axios
-      .get(`/names/get/${gender || this.state.gender}`)
+      .get("/names/get")
       .then(res => {
         let names = res.data;
         names.forEach(x => {
-          namesStackTemp.unshift(x.name);
+          namesStackTemp.push(x.name);
           this.setState({ namesStack: namesStackTemp });
           return;
         });
@@ -112,6 +92,7 @@ class Board extends Component {
 
     //if the user is logged in, add the name to the user's list
     if (this.props.state.isAuthenticated) {
+      console.log("added!");
       console.log(this.props.state.user.names);
       this.props.addName(
         this.props.state.user._id,
@@ -125,6 +106,7 @@ class Board extends Component {
   // when user "dislikes" the name
   swipedNo = () => {
     console.log("no!");
+
     this.removeName();
   };
 
@@ -140,26 +122,8 @@ class Board extends Component {
   };
 
   // function to handle the user's swipe of a name
-  animateSwipe = e => {
-    this.setState({ x: -e.deltaX });
-    this.setState({ rotation: -e.deltaX / 10 });
-    this.setState({ opacity: 1 - Math.abs(this.state.x) / 520 });
-  };
-
-  handleSwipe = e => {
-    if (e.deltaX >= 100 || e.deltaX <= -100) {
-      console.log(e.dir);
-      e.dir === "Right" ? this.swipedYes() : this.swipedNo();
-    }
-
-    this.setState({ x: 0 });
-    this.setState({ rotation: 0 });
-    this.setState({ opacity: 1 });
-  };
-
-  selectGender = e => {
-    this.setState({ gender: e.target.value });
-    this.getNames(e.target.value);
+  handleSwipe = direction => {
+    direction === "right" ? this.swipedYes() : this.swipedNo();
   };
 
   renderCards = () => {
@@ -190,53 +154,13 @@ class Board extends Component {
             {this.state.namesStack[this.state.namesStack.length - 2]}
           </div>
           <Swipeable
-            preventDefaultTouchmoveEvent={true}
-            trackMouse={true}
-            style={{ width: "320px" }}
-            onSwiping={(e, x, y) => this.animateSwipe(e, x, y)}
-            onSwiped={data => this.handleSwipe(data)}
+            min="100"
+            onSwipe={direction => this.handleSwipe(direction)}
           >
-            <div
-              className="name-card card-top"
-              style={{
-                transform:
-                  "translateX(" +
-                  this.state.x +
-                  "px) rotate(" +
-                  this.state.rotation +
-                  "deg)",
-                opacity: this.state.opacity
-              }}
-            >
+            <div className="name-card card-top">
               {this.state.namesStack[this.state.namesStack.length - 1]}
             </div>
           </Swipeable>
-          <div className="toggle-container">
-            <button
-              className="toggle-button"
-              value="girl"
-              style={this.state.gender === "girl" ? selectedStyle : {}}
-              onClick={e => this.selectGender(e)}
-            >
-              girl
-            </button>
-            <button
-              className="toggle-button"
-              value="all"
-              style={this.state.gender === "all" ? selectedStyle : {}}
-              onClick={e => this.selectGender(e)}
-            >
-              all
-            </button>
-            <button
-              className="toggle-button"
-              value="boy"
-              style={this.state.gender === "boy" ? selectedStyle : {}}
-              onClick={e => this.selectGender(e)}
-            >
-              boy
-            </button>
-          </div>
         </div>
       </div>
     );

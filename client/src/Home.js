@@ -10,15 +10,6 @@ function Home(props) {
         <p>Easy tinder-like swiping of names </p>
         <p>Link your account to your partner and find name matches ❤</p>
       </div>
-      <div>
-        <video
-          className="demo-video"
-          autoPlay
-          loop
-          id="myVideo"
-          src="https://res.cloudinary.com/hgc6snrq8/video/upload/v1547468755/demo.mp4"
-        />
-      </div>
     </div>
   );
 }

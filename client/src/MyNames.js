@@ -28,7 +28,7 @@ class MyNames extends Component {
             className="action-button"
             onClick={() => this.deleteName(index)}
           >
-            <FontAwesomeIcon icon="trash" />
+            <FontAwesomeIcon icon="trash" className="icon" />
           </button>
         </li>
       );

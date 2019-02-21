@@ -6,10 +6,30 @@ namesRouter.use(bodyParser.json());
 
 const Name = require("../models/names.js");
 
-namesRouter.get("/get", (req, res) => {
-  var r = Math.floor(Math.random() * 71142);
+namesRouter.get("/get/all", (req, res) => {
+  Name.aggregate([{ $sample: { size: 8 } }]).exec(function(err, names) {
+    if (!names) {
+      res.send({ error: "error getting names" });
+    } else {
+      res.send(names);
+    }
+  });
+});
 
-  Name.aggregate([{ $match: { gender: "F" } }, { $sample: { size: 6 } }]).exec(
+namesRouter.get("/get/boy", (req, res) => {
+  Name.aggregate([{ $match: { gender: "M" } }, { $sample: { size: 8 } }]).exec(
+    function(err, names) {
+      if (!names) {
+        res.send({ error: "error getting names" });
+      } else {
+        res.send(names);
+      }
+    }
+  );
+});
+
+namesRouter.get("/get/girl", (req, res) => {
+  Name.aggregate([{ $match: { gender: "F" } }, { $sample: { size: 8 } }]).exec(
     function(err, names) {
       if (!names) {
         res.send({ error: "error getting names" });

@@ -9,9 +9,10 @@ body,
 html {
   margin: 0px;
   font-family: "Comfortaa", cursive;
-  color: $text-color;
+  color: white;
   font-size: $font-medium;
   height: 100%;
+  overflow: hidden;
 }
 
 #root {
@@ -23,21 +24,21 @@ html {
 }
 
 .content {
-  background: linear-gradient(to right, $main_color, #b4bad2);
+  //background: linear-gradient(to right, $accent_light, #b4bad2);
+  background-color: $main_color;
+
   height: 100%;
+  overflow: hidden;
   padding-top: $header-height;
   display: flex;
   flex-direction: column;
   align-items: center;
-  &.center {
-    justify-content: center;
-  }
 }
 
 header {
   text-transform: uppercase;
   font-size: $font-medium;
-  background-color: $nav_color;
+  background-color: #515461;
   position: fixed;
   height: $header-height;
   width: 100%;
@@ -55,38 +56,39 @@ h3 {
 
 .action-button {
   position: absolute;
-  right: 1em;
-  top: 0.5em;
+  right: 30px;
+  top: 10px;
   border: none;
   background-color: inherit;
   color: inherit;
   display: none;
   cursor: pointer;
+  font-size: $font-big;
 }
 
 a {
-  color: $text-color;
+  color: $main_color;
 }
 
 .btn {
   margin: 0px 10px 0px 10px;
   float: right;
-  background-color: $main-color;
+  background-color: $accent_light;
   border: none;
   border-radius: 2px;
   padding: 8px 16px 8px 16px;
   cursor: pointer;
-  color: $nav_color;
+  color: $main_color;
   font-size: $font-medium;
   &.btn-light {
-    background-color: lighten($main-color, 12%);
+    background-color: lighten($accent_light, 12%);
   }
 }
 
 // inner containers
 .home {
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   justify-content: space-around;
   padding: $header-height 100px 0px 100px;
@@ -94,99 +96,63 @@ a {
 .info {
   padding: $header-height 50px 0px 50px;
 }
-.name-card {
-  position: absolute;
-  font-size: 4em;
-  height: 300px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    color: $accent_color;
-  }
-  &.swiped-yes {
-    -webkit-animation: slide-right 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-      both;
-    animation: slide-right 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  }
-  &.swiped-no {
-    -webkit-animation: slide-left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-    animation: slide-left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  }
+.code {
+  font-size: $font-big;
 }
 
 .card-container {
-  position: relative;
-  height: 300px;
-  width: 400px;
+  width: 320px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
-.navigation-arrows {
+.name-card {
   position: absolute;
-  height: 100px;
-  width: 100%;
+  top: 90px;
+  width: 320px;
+  padding: 200px 0px;
+  background: linear-gradient(to bottom, $accent_light, #b4bad2);
+  border: 1px solid $main_color;
+  border-radius: 10px;
+  text-align: center;
+  font-size: $font-giant;
+  color: $main_color;
+}
+
+.toggle-container {
+  position: absolute;
+  top: 530px;
+  border: 1px solid $main_color;
+  border-radius: 10px;
+  padding: 5px 10px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
+  margin: 20px auto;
+  background-color: $accent_light;
+  border-radius: 30px;
+  //border: 1px solid white;
 }
 
-.nav-button {
-  position: absolute;
-  background: rgba(255, 255, 255, 0);
-  opacity: 1;
-  color: $text-color;
+.toggle-button {
+  background: white;
+  border-radius: 30px;
   border: none;
-  height: 60px;
-  width: 60px;
-  font-size: 4em;
-  cursor: pointer;
-  &:first-child {
-    left: -60px;
-  }
-  &:last-child {
-    right: -60px;
-  }
+  height: 40px;
+  width: 50px;
+  margin: 0 8px;
+  background-color: #b4bad2;
 }
 
-@keyframes slide-right {
-  0% {
-    -webkit-transform: translateX(0) rotate(0deg);
-    transform: translateX(0) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: translateX(100px) rotate(90deg);
-    transform: translateX(100px) rotate(90deg);
-    opacity: 0;
-  }
-}
-
-@keyframes slide-left {
-  0% {
-    -webkit-transform: translateX(0) rotate(0deg);
-    transform: translateX(0) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: translateX(-100px) rotate(-90deg);
-    transform: translateX(-100px) rotate(-90deg);
-    opacity: 0;
-  }
-}
-
-.code {
-  font-size: 1.2em;
+.selected {
+  background-color: black;
 }
 
 // demo / home page
 #myVideo {
   width: 200px;
 }
-
 .demo-text,
 .demo-video {
   margin: 30px;
@@ -208,6 +174,9 @@ a {
   .home {
     padding: $header-height 20px 0px 20px;
   }
+  .hint {
+    display: none;
+  }
   .nav-button {
     &:first-child {
       left: 60px;
@@ -221,7 +190,9 @@ a {
 }
 
 // notifications
+
 .hint {
+  margin-top: 480px;
   text-align: right;
   font-style: italic;
   padding-left: 150px;

@@ -9,14 +9,15 @@
   list-style: none;
   padding-inline-start: 0px;
   overflow-y: scroll;
+  color: $main_color;
 
   li {
     width: 100%;
-    padding: 0.3em 0.3em;
+    padding: 10px 10px;
     margin-bottom: 0.2em;
-    background-color: lighten($main-color, 12%);
-    font-size: 0.8em;
-    border-bottom: 1px solid lighten($text-color, 40%);
+    background-color: lighten($accent_light, 12%);
+    font-size: $font-big;
+    border-bottom: 1px solid lighten($main_color, 40%);
     box-shadow: 1px 1px 3px 0px rgba(55, 58, 71, 0.21);
     position: relative;
   }
