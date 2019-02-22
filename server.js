@@ -5,6 +5,7 @@ const express = require("express");
 var bodyParser = require("body-parser");
 const passport = require("passport");
 const path = require("path");
+var fs = require("fs");
 
 const app = express();
 
@@ -42,4 +43,11 @@ app.use("/names", namesRouter);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
+
+var assetlinks = fs.readFileSync(__dirname + "/static/assetlinks.json");
+app.get("/.well-known/assetlinks.json", function(req, res, next) {
+  res.set("Content-Type", "application/json");
+  res.status(200).send(assetlinks);
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
