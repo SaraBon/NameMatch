@@ -8,5 +8,15 @@
         "C7:92:1B:9E:6C:F4:E9:CC:3F:09:C5:A7:E9:10:A5:9E:FC:2E:1D:0F:98:49:71:DF:AA:E6:12:DA:D9:17:B8:BC"
       ]
     }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "xyz.appmaker.fzfqnw",
+      "sha256_cert_fingerprints": [
+        "24:74:BA:F4:70:B8:70:B6:A3:D5:5A:12:1A:8D:A9:FE:C8:AC:E1:AE:D4:A2:39:DE:A9:AD:88:8D:AD:B6:37:3A"
+      ]
+    }
   }
 ]
