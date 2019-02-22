@@ -1,11 +1,11 @@
 const userRouter = require("./routes/userRouter.js");
 const namesRouter = require("./routes/namesRouter.js");
+const assetRouter = require("./routes/assetRouter.js");
 const mongoose = require("mongoose");
 const express = require("express");
 var bodyParser = require("body-parser");
 const passport = require("passport");
 const path = require("path");
-var fs = require("fs");
 
 const app = express();
 
@@ -39,15 +39,10 @@ app.use(express.static(path.join(__dirname, "client", "build")));
 
 app.use("/users", userRouter);
 app.use("/names", namesRouter);
+app.use("/.well-known", assetRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
-
-var assetlinks = fs.readFileSync(__dirname + "/static/assetlinks.json");
-app.get("/.well-known/assetlinks.json", function(req, res, next) {
-  res.set("Content-Type", "application/json");
-  res.status(200).send(assetlinks);
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

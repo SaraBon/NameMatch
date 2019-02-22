@@ -17,6 +17,7 @@ namesRouter.get("/get/all", (req, res) => {
 });
 
 namesRouter.get("/get/boy", (req, res) => {
+  console.log("ddd");
   Name.aggregate([{ $match: { gender: "M" } }, { $sample: { size: 8 } }]).exec(
     function(err, names) {
       if (!names) {
