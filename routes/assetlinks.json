@@ -3,9 +3,9 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "xyz.appmaker.zgjsww",
+      "package_name": "com.matchbabynames.app",
       "sha256_cert_fingerprints": [
-        "C7:92:1B:9E:6C:F4:E9:CC:3F:09:C5:A7:E9:10:A5:9E:FC:2E:1D:0F:98:49:71:DF:AA:E6:12:DA:D9:17:B8:BC"
+        "06:F7:F7:49:F9:8B:52:CC:32:B1:66:17:26:55:39:5C:8A:7F:17:C4:B9:DE:58:26:4B:D4:6A:FB:D0:0C:03:93"
       ]
     }
   },
