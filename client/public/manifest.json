@@ -35,7 +35,7 @@
   ],
   "start_url": ".",
   "scope": "/",
-  "display": "standalone",
-  "theme_color": "#bfe2e2",
+  "display": "fullscreen",
+  "theme_color": "#BFE2E2",
   "background_color": "#373a47"
 }
