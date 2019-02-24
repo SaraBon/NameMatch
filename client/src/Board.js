@@ -11,6 +11,8 @@ import {
   updateUnseenNames
 } from "./actions/userActions";
 
+import Loader from "react-loader-spinner";
+
 let selectedStyle = {
   backgroundColor: "#798199"
 };
@@ -27,10 +29,8 @@ class Board extends Component {
       x: 0,
       rotation: 0,
       opacity: 1,
+      direction: "",
       gender: "all"
-      // girl: false,
-      // both: true,
-      // boy: false
     };
   }
 
@@ -140,21 +140,40 @@ class Board extends Component {
   };
 
   // function to handle the user's swipe of a name
-  animateSwipe = e => {
+  animateSwipe = (e, x, y) => {
+    const noIndicator = document.getElementById("no");
+    const yesIndicator = document.getElementById("yes");
+
     this.setState({ x: -e.deltaX });
+    this.setState({ direction: e.dir });
+
     this.setState({ rotation: -e.deltaX / 10 });
     this.setState({ opacity: 1 - Math.abs(this.state.x) / 520 });
+
+    if (e.deltaX >= 100) {
+      noIndicator.style.visibility = "visible";
+    } else if (e.deltaX <= -100) {
+      yesIndicator.style.visibility = "visible";
+    } else {
+      noIndicator.style.visibility = "hidden";
+      yesIndicator.style.visibility = "hidden";
+    }
   };
 
   handleSwipe = e => {
+    const noIndicator = document.getElementById("no");
+    const yesIndicator = document.getElementById("yes");
+
     if (e.deltaX >= 100 || e.deltaX <= -100) {
-      console.log(e.dir);
       e.dir === "Right" ? this.swipedYes() : this.swipedNo();
     }
 
+    // when a swipe ends, reset all css animation & style
     this.setState({ x: 0 });
     this.setState({ rotation: 0 });
     this.setState({ opacity: 1 });
+    noIndicator.style.visibility = "hidden";
+    yesIndicator.style.visibility = "hidden";
   };
 
   selectGender = e => {
@@ -181,7 +200,9 @@ class Board extends Component {
       </div>
     ) : this.state.loading ? (
       <div className="content">
-        <div>Loading...</div>
+        <div className="card-container">
+          <Loader type="Hearts" color="#BFE2E2" height="100" width="100" />
+        </div>
       </div>
     ) : (
       <div className="content">
@@ -208,6 +229,12 @@ class Board extends Component {
                 opacity: this.state.opacity
               }}
             >
+              <div className="indicator" id="no">
+                <div className="indicator-inner">Nope</div>
+              </div>
+              <div className="indicator" id="yes">
+                <div className="indicator-inner">Yes</div>
+              </div>
               {this.state.namesStack[this.state.namesStack.length - 1]}
             </div>
           </Swipeable>

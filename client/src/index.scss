@@ -24,9 +24,7 @@ html {
 }
 
 .content {
-  //background: linear-gradient(to right, $accent_light, #b4bad2);
   background-color: $main_color;
-
   height: 100%;
   overflow: hidden;
   padding-top: $header-height;
@@ -64,6 +62,7 @@ h3 {
   display: none;
   cursor: pointer;
   font-size: $font-big;
+  outline: none;
 }
 
 a {
@@ -80,9 +79,14 @@ a {
   cursor: pointer;
   color: $main_color;
   font-size: $font-medium;
+  outline: none;
   &.btn-light {
     background-color: lighten($accent_light, 12%);
   }
+}
+
+.icon {
+  outline: none;
 }
 
 // inner containers
@@ -112,8 +116,8 @@ a {
   top: 90px;
   width: 320px;
   padding: 200px 0px;
-  background: linear-gradient(to bottom, $accent_light, #b4bad2);
-  border: 1px solid $main_color;
+  background: linear-gradient(to bottom, $accent_light, $accent_second);
+  border: 1px solid $accent_second;
   border-radius: 10px;
   text-align: center;
   font-size: $font-giant;
@@ -142,11 +146,39 @@ a {
   height: 40px;
   width: 50px;
   margin: 0 8px;
-  background-color: #b4bad2;
+  background-color: $accent_second;
+  outline: none;
 }
 
 .selected {
   background-color: black;
+}
+
+.indicator {
+  position: absolute;
+  top: 0px;
+  visibility: hidden;
+  //  border: 1px solid black;
+  width: 320px;
+  border-radius: 10px;
+}
+
+#yes {
+  //  color: green;
+  text-align: left;
+  background-color: MediumAquamarine;
+}
+
+#no {
+  //  color: red;
+  text-align: right;
+  background-color: $title_color;
+}
+
+.indicator-inner {
+  padding: 8px 14px;
+  font-size: $font-big;
+  text-transform: uppercase;
 }
 
 // demo / home page

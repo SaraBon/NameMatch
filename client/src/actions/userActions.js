@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 
 // Login - get user token
 export const loginUser = userData => dispatch => {
+  dispatch(setUserLoading());
   // get basic user data
   axios
     .post("/users/login", userData)
@@ -76,6 +77,7 @@ export const setCurrentUser = userData => {
 
 //register a new user
 export const registerUser = userData => dispatch => {
+  dispatch(setUserLoading());
   axios
     .post("/users/register", userData)
     .then(() => {

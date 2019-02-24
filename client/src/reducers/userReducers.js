@@ -26,13 +26,15 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
-        user: action.payload
+        user: action.payload,
+        loading: false
       };
 
     case REGISTRATION_SUCCESS:
       return {
         ...state,
-        registration_success: true
+        registration_success: true,
+        loading: false
       };
 
     case USER_LOADING:

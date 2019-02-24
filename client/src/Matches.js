@@ -3,6 +3,7 @@ import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { connect } from "react-redux";
 import { deleteNameByName, findMatches } from "./actions/userActions";
+import Loader from "react-loader-spinner";
 
 class Matches extends Component {
   constructor(props) {
@@ -66,7 +67,7 @@ class Matches extends Component {
     } else if (this.props.state.isAuthenticated && this.props.state.loading) {
       return (
         <div className="content">
-          <h1>Loading...</h1>
+          <Loader type="Hearts" color="#BFE2E2" height="100" width="100" />
         </div>
       );
     } else if (!this.props.state.isAuthenticated) {

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./index.scss";
 import { getFriendsNames } from "./actions/userActions";
 import { connect } from "react-redux";
+import Loader from "react-loader-spinner";
 
 class FriendsNames extends Component {
   constructor(props) {
@@ -59,7 +60,7 @@ class FriendsNames extends Component {
     } else if (this.props.state.loading) {
       return (
         <div className="content">
-          <h1>Loading...</h1>
+          <Loader type="Hearts" color="#BFE2E2" height="100" width="100" />
         </div>
       );
     } else if (!this.props.state.isAuthenticated) {

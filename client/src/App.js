@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import "./index.scss";
+import { NavLink } from "react-router-dom";
 
 //Redux
 import { connect } from "react-redux";
@@ -8,7 +10,6 @@ import { logoutUser } from "./actions/userActions";
 
 //Components
 import Home from "./Home";
-import Menu from "./Menu";
 import Register from "./Register";
 import Login from "./Login";
 import Board from "./Board";
@@ -20,6 +21,7 @@ import Info from "./Info";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "react-loader-spinner";
 
 class App extends Component {
   constructor(props) {
@@ -28,6 +30,29 @@ class App extends Component {
       menuIsOpen: false
     };
   }
+
+  componentDidMount = () => {
+    document.addEventListener("click", this.handleDocumentClick);
+  };
+
+  // function to close menu if clicked anywhere outside
+  handleDocumentClick = evt => {
+    const menuArea = ReactDOM.findDOMNode(this.refs.menuArea);
+    const menuButton = ReactDOM.findDOMNode(this.refs.menuButton);
+
+    let menuIcon = document.getElementById("menu-icon");
+    let menu = document.getElementById("menu");
+
+    if (
+      !menuArea.contains(evt.target) &&
+      !menuButton.contains(evt.target) &&
+      this.state.menuIsOpen
+    ) {
+      menuIcon.classList.remove("isopen");
+      menu.classList.remove("isopen");
+      this.setState({ menuIsOpen: false });
+    }
+  };
 
   //depending on if a user is logged in or not, render different buttons
   renderLogBtn = () => {
@@ -75,6 +100,66 @@ class App extends Component {
     }
   };
 
+  // render names list only if user logged in
+  renderMyNames = () => {
+    if (this.props.state.isAuthenticated) {
+      return (
+        <li>
+          <NavLink
+            exact
+            to="/MyNames"
+            activeStyle={{
+              color: "#f57075"
+            }}
+            onClick={this.props.toggleMenu}
+          >
+            My Names
+          </NavLink>
+        </li>
+      );
+    }
+  };
+
+  // render matches list only if user logged in & has another user linked
+  renderMatches = () => {
+    if (this.props.state.isAuthenticated && this.props.state.user.linkedID) {
+      return (
+        <li>
+          <NavLink
+            exact
+            to="/Matches"
+            activeStyle={{
+              color: "#f57075"
+            }}
+            onClick={this.toggleMenu}
+          >
+            Matches
+          </NavLink>
+        </li>
+      );
+    }
+  };
+
+  // render account only if user logged in
+  renderAccount = () => {
+    if (this.props.state.isAuthenticated) {
+      return (
+        <li>
+          <NavLink
+            exact
+            to="/Account"
+            activeStyle={{
+              color: "#f57075"
+            }}
+            onClick={this.toggleMenu}
+          >
+            Account
+          </NavLink>
+        </li>
+      );
+    }
+  };
+
   render() {
     return (
       <Router>
@@ -82,7 +167,7 @@ class App extends Component {
           <ToastContainer />
           <header>
             {this.renderLogBtn()}
-            <div className="clickable-area">
+            <div className="clickable-area" ref="menuButton">
               <div id="menu-icon" onClick={this.toggleMenu}>
                 <span />
                 <span />
@@ -91,8 +176,64 @@ class App extends Component {
               </div>
             </div>
           </header>
-          <Menu toggleMenu={this.toggleMenu} />
+          <div>
+            <div id="menu" ref="menuArea">
+              <ul>
+                <li>
+                  <NavLink
+                    exact
+                    to="/Home"
+                    activeStyle={{
+                      color: "#f57075"
+                    }}
+                    onClick={this.toggleMenu}
+                  >
+                    Home
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    exact
+                    to="/Board"
+                    activeStyle={{
+                      color: "#f57075"
+                    }}
+                    onClick={this.toggleMenu}
+                  >
+                    Name Board
+                  </NavLink>
+                </li>
+                {this.renderMyNames()}
+                {this.renderMatches()}
+                {this.renderAccount()}
+                <li>
+                  <NavLink
+                    exact
+                    to="/Info"
+                    activeStyle={{
+                      color: "#f57075"
+                    }}
+                    onClick={this.toggleMenu}
+                  >
+                    Info
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+          </div>
           <Switch>
+            {this.props.state.loading && (
+              <div className="content">
+                <div className="card-container">
+                  <Loader
+                    type="Hearts"
+                    color="#BFE2E2"
+                    height="100"
+                    width="100"
+                  />
+                </div>
+              </div>
+            )}
             <Route exact path="/" render={() => <Home />} />
             <Route exact path="/home" render={() => <Home />} />
             <Route path="/register" render={() => <Register />} />
