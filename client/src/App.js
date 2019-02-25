@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { logoutUser } from "./actions/userActions";
 
 //Components
-import Home from "./Home";
+import About from "./About";
 import Register from "./Register";
 import Login from "./Login";
 import Board from "./Board";
@@ -17,7 +17,6 @@ import MyNames from "./MyNames";
 import FriendsNames from "./FriendsNames";
 import Matches from "./Matches";
 import Account from "./Account";
-import Info from "./Info";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,49 +37,17 @@ class App extends Component {
   // function to close menu if clicked anywhere outside
   handleDocumentClick = evt => {
     const menuArea = ReactDOM.findDOMNode(this.refs.menuArea);
+    console.log(menuArea);
     const menuButton = ReactDOM.findDOMNode(this.refs.menuButton);
-
     let menuIcon = document.getElementById("menu-icon");
     let menu = document.getElementById("menu");
 
-    if (
-      !menuArea.contains(evt.target) &&
-      !menuButton.contains(evt.target) &&
-      this.state.menuIsOpen
-    ) {
-      menuIcon.classList.remove("isopen");
-      menu.classList.remove("isopen");
-      this.setState({ menuIsOpen: false });
-    }
-  };
-
-  //depending on if a user is logged in or not, render different buttons
-  renderLogBtn = () => {
-    let logout = (
-      <div className="btn-wrap">
-        <button className="btn btn-light">
-          <Link to="/login" onClick={this.props.logoutUser}>
-            Logout
-          </Link>
-        </button>
-      </div>
-    );
-
-    let loginAndReg = (
-      <div className="btn-wrap">
-        <button className="btn">
-          <Link to="/login">Login</Link>
-        </button>
-        <button className="btn btn-light">
-          <Link to="/register">Register</Link>
-        </button>
-      </div>
-    );
-
-    if (this.props.state.isAuthenticated) {
-      return logout;
-    } else {
-      return loginAndReg;
+    if (this.state.menuIsOpen) {
+      if (!menuArea.contains(evt.target) && !menuButton.contains(evt.target)) {
+        menuIcon.classList.remove("isopen");
+        menu.classList.remove("isopen");
+        this.setState({ menuIsOpen: false });
+      }
     }
   };
 
@@ -100,73 +67,30 @@ class App extends Component {
     }
   };
 
-  // render names list only if user logged in
-  renderMyNames = () => {
-    if (this.props.state.isAuthenticated) {
-      return (
-        <li>
-          <NavLink
-            exact
-            to="/MyNames"
-            activeStyle={{
-              color: "#f57075"
-            }}
-            onClick={this.props.toggleMenu}
-          >
-            My Names
-          </NavLink>
-        </li>
-      );
-    }
-  };
-
-  // render matches list only if user logged in & has another user linked
-  renderMatches = () => {
-    if (this.props.state.isAuthenticated && this.props.state.user.linkedID) {
-      return (
-        <li>
-          <NavLink
-            exact
-            to="/Matches"
-            activeStyle={{
-              color: "#f57075"
-            }}
-            onClick={this.toggleMenu}
-          >
-            Matches
-          </NavLink>
-        </li>
-      );
-    }
-  };
-
-  // render account only if user logged in
-  renderAccount = () => {
-    if (this.props.state.isAuthenticated) {
-      return (
-        <li>
-          <NavLink
-            exact
-            to="/Account"
-            activeStyle={{
-              color: "#f57075"
-            }}
-            onClick={this.toggleMenu}
-          >
-            Account
-          </NavLink>
-        </li>
-      );
-    }
-  };
-
   render() {
     return (
       <Router>
         <div id="wrapper">
           <ToastContainer />
           <header>
-            {this.renderLogBtn()}
+            {this.props.state.isAuthenticated ? (
+              <div className="btn-wrap">
+                <button className="btn btn-light">
+                  <Link to="/login" onClick={this.props.logoutUser}>
+                    Logout
+                  </Link>
+                </button>
+              </div>
+            ) : (
+              <div className="btn-wrap">
+                <button className="btn">
+                  <Link to="/login">Login</Link>
+                </button>
+                <button className="btn btn-light">
+                  <Link to="/register">Register</Link>
+                </button>
+              </div>
+            )}
             <div className="clickable-area" ref="menuButton">
               <div id="menu-icon" onClick={this.toggleMenu}>
                 <span />
@@ -182,18 +106,6 @@ class App extends Component {
                 <li>
                   <NavLink
                     exact
-                    to="/Home"
-                    activeStyle={{
-                      color: "#f57075"
-                    }}
-                    onClick={this.toggleMenu}
-                  >
-                    Home
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    exact
                     to="/Board"
                     activeStyle={{
                       color: "#f57075"
@@ -203,19 +115,60 @@ class App extends Component {
                     Name Board
                   </NavLink>
                 </li>
-                {this.renderMyNames()}
-                {this.renderMatches()}
-                {this.renderAccount()}
+                {this.props.state.isAuthenticated && (
+                  <li>
+                    <NavLink
+                      exact
+                      to="/MyNames"
+                      activeStyle={{
+                        color: "#f57075"
+                      }}
+                      onClick={this.toggleMenu}
+                    >
+                      My Names
+                    </NavLink>
+                  </li>
+                )}
+                {this.props.state.isAuthenticated &&
+                  this.props.state.user.linkedID && (
+                    <li>
+                      <NavLink
+                        exact
+                        to="/Matches"
+                        activeStyle={{
+                          color: "#f57075"
+                        }}
+                        onClick={this.toggleMenu}
+                      >
+                        Matches
+                      </NavLink>
+                    </li>
+                  )}
+                {this.props.state.isAuthenticated && (
+                  <li>
+                    <NavLink
+                      exact
+                      to="/Account"
+                      activeStyle={{
+                        color: "#f57075"
+                      }}
+                      onClick={this.toggleMenu}
+                    >
+                      Account
+                    </NavLink>
+                  </li>
+                )}
+
                 <li>
                   <NavLink
                     exact
-                    to="/Info"
+                    to="/About"
                     activeStyle={{
                       color: "#f57075"
                     }}
                     onClick={this.toggleMenu}
                   >
-                    Info
+                    About
                   </NavLink>
                 </li>
               </ul>
@@ -234,8 +187,8 @@ class App extends Component {
                 </div>
               </div>
             )}
-            <Route exact path="/" render={() => <Home />} />
-            <Route exact path="/home" render={() => <Home />} />
+            <Route exact path="/" render={() => <Board />} />
+            <Route exact path="/About" render={() => <About />} />
             <Route path="/register" render={() => <Register />} />
             <Route path="/login" render={() => <Login />} />
             <Route path="/Board" render={() => <Board />} />
@@ -243,7 +196,6 @@ class App extends Component {
             <Route path="/FriendsNames" render={() => <FriendsNames />} />
             <Route path="/Matches" render={() => <Matches />} />
             <Route path="/Account" render={() => <Account />} />
-            <Route path="/Info" render={() => <Info />} />
             <Route
               path=""
               render={() => (

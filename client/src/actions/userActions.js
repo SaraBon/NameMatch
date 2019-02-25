@@ -21,11 +21,11 @@ import { toast } from "react-toastify";
 
 // Login - get user token
 export const loginUser = userData => dispatch => {
-  dispatch(setUserLoading());
   // get basic user data
   axios
     .post("/users/login", userData)
     .then(res => {
+      dispatch(setUserLoading());
       // Set token to localStorage
       const { token } = res.data;
       localStorage.setItem("jwtToken", token);
@@ -77,7 +77,7 @@ export const setCurrentUser = userData => {
 
 //register a new user
 export const registerUser = userData => dispatch => {
-  dispatch(setUserLoading());
+  //  dispatch(setUserLoading());
   axios
     .post("/users/register", userData)
     .then(() => {
@@ -277,10 +277,15 @@ export const deleteAccount = userID => dispatch => {
   });
 };
 
-//under development: delete a name from the matches list
-export const deleteNameByName = (userID, name) => dispatch => {
+//delete a name from the matches list
+export const deleteNameByName = (userID, name, usersNames) => dispatch => {
+  // find the name's index in the user's name list
+  const index = usersNames.indexOf(name);
+
+  dispatch(deleteName(userID, index));
+  //delete it from the user's list
   axios
-    .post(`/users/delete/${userID}`, { name: name })
+    .post(`/users/delete/${userID}`, { index: index })
     .then(res => {
       dispatch({
         type: UPDATE_NAMES,

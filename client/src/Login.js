@@ -54,8 +54,6 @@ class Login extends Component {
       <div className="content">
         <div className="form-wrap">
           <h3>Login</h3>
-
-          {this.renderErrors()}
           <form noValidate onSubmit={this.onSubmit}>
             <div className="">
               <label htmlFor="email">Email</label>
@@ -66,7 +64,21 @@ class Login extends Component {
                 id="email"
                 type="email"
               />
+              {this.props.errors.errors && this.props.errors.errors.email && (
+                <div>
+                  <p className="error">{this.props.errors.errors.email}</p>
+                </div>
+              )}
+              {this.props.errors.errors &&
+                this.props.errors.errors.emailnotfound && (
+                  <div>
+                    <p className="error">
+                      {this.props.errors.errors.emailnotfound}
+                    </p>
+                  </div>
+                )}
             </div>
+
             <div className="">
               <label htmlFor="password">Password</label>
 
@@ -76,6 +88,16 @@ class Login extends Component {
                 id="password"
                 type="password"
               />
+              {this.props.errors.errors && this.props.errors.errors.password && (
+                <div>
+                  <p className="error">{this.props.errors.errors.password}</p>
+                </div>
+              )}
+              {this.props.errors.errors && this.props.errors.errors.password2 && (
+                <div>
+                  <p className="error">{this.props.errors.errors.password2}</p>
+                </div>
+              )}
             </div>
 
             <div>

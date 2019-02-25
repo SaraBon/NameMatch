@@ -42,20 +42,6 @@ class Register extends Component {
     this.props.registerUser(newUser);
   };
 
-  // render errors, if there are
-  renderErrors = () => {
-    if (this.props.errors.errors) {
-      return (
-        <div>
-          <p className="error">{this.props.errors.errors.name}</p>
-          <p className="error">{this.props.errors.errors.email}</p>
-          <p className="error">{this.props.errors.errors.password}</p>
-          <p className="error">{this.props.errors.errors.password2}</p>
-        </div>
-      );
-    }
-  };
-
   render() {
     if (this.props.state.registration_success) {
       return <Redirect to="/login" />;
@@ -70,7 +56,6 @@ class Register extends Component {
             <p className="link">
               <Link to="/login"> Log in here</Link>
             </p>
-            {this.renderErrors()}
           </div>
           <form noValidate onSubmit={this.onSubmit}>
             <div className="">
@@ -82,15 +67,24 @@ class Register extends Component {
                 type="text"
               />
             </div>
+            {this.props.errors.errors && this.props.errors.errors.name && (
+              <div>
+                <p className="error">{this.props.errors.errors.name}</p>
+              </div>
+            )}
             <div className="">
               <label htmlFor="email">Email</label>
-
               <input
                 onChange={this.onChange}
                 value={this.state.email}
                 id="email"
                 type="email"
               />
+              {this.props.errors.errors && this.props.errors.errors.email && (
+                <div>
+                  <p className="error">{this.props.errors.errors.email}</p>
+                </div>
+              )}
             </div>
             <div className="">
               <label htmlFor="password">Password</label>
@@ -101,6 +95,11 @@ class Register extends Component {
                 id="password"
                 type="password"
               />
+              {this.props.errors.errors && this.props.errors.errors.password && (
+                <div>
+                  <p className="error">{this.props.errors.errors.password}</p>
+                </div>
+              )}
             </div>
             <div className="">
               <label htmlFor="password2">Confirm Password</label>
@@ -111,6 +110,11 @@ class Register extends Component {
                 id="password2"
                 type="password"
               />
+              {this.props.errors.errors && this.props.errors.errors.password2 && (
+                <div>
+                  <p className="error">{this.props.errors.errors.password2}</p>
+                </div>
+              )}
             </div>
             <div>
               <button type="submit" className="btn btn-light">

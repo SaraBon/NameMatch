@@ -111,6 +111,17 @@ a {
   align-items: center;
 }
 
+.error-container {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  & h1 {
+    align-self: center;
+  }
+}
+
 .name-card {
   position: absolute;
   top: 90px;
@@ -152,33 +163,6 @@ a {
 
 .selected {
   background-color: black;
-}
-
-.indicator {
-  position: absolute;
-  top: 0px;
-  visibility: hidden;
-  //  border: 1px solid black;
-  width: 320px;
-  border-radius: 10px;
-}
-
-#yes {
-  //  color: green;
-  text-align: left;
-  background-color: MediumAquamarine;
-}
-
-#no {
-  //  color: red;
-  text-align: right;
-  background-color: $title_color;
-}
-
-.indicator-inner {
-  padding: 8px 14px;
-  font-size: $font-big;
-  text-transform: uppercase;
 }
 
 // demo / home page
@@ -233,5 +217,6 @@ a {
 .error {
   color: red;
   font-style: italic;
-  font-size: $font-small;
+  font-size: $font-tiny;
+  margin-top: -10px;
 }

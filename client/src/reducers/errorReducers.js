@@ -5,7 +5,8 @@ import {
 } from "../actions/types";
 const initialState = {
   deleteError: false,
-  errors: {}
+  errors: {},
+  loading: false
 };
 export default function(state = initialState, action) {
   switch (action.type) {
@@ -16,6 +17,7 @@ export default function(state = initialState, action) {
     case VALIDATION_ERROR:
       return {
         ...state,
+        loading: false,
         errors: action.payload
       };
     case CLEAR_ERRORS:

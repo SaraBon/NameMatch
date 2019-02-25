@@ -21,7 +21,12 @@ class Matches extends Component {
   //Delete a name from the list
   deleteName = name => {
     // Update Database
-    this.props.deleteNameByName(this.props.state.user._id, name);
+    console.log("delete: " + name);
+    this.props.deleteNameByName(
+      this.props.state.user._id,
+      name,
+      this.props.state.user.names
+    );
     this.forceUpdate();
   };
 

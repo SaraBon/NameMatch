@@ -156,23 +156,8 @@ userRouter.post("/delete/:id", (req, res) => {
         res.send(user);
       });
     }
-    //TEMPORARILY DISABLED: delete name by name (not index)
-    // else if (req.body.name) {
-    //   let index = user.names.indexOf(req.body.name);
-    //   user.names.splice(index, 1);
-    //   user.save(function(err) {
-    //     if (err) {
-    //       return res.status(400).json({
-    //         error: "Oops, the name was not deleted, please try again"
-    //       });
-    //     }
-    //
-    //     res.send(user);
-    //   });
-    // }
   });
 });
-
 // find a user by his code
 userRouter.post("/findUserByCode", (req, res) => {
   User.findOne(req.body, function(err, user) {

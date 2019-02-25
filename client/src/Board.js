@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Swipeable } from "react-swipeable";
+import Error from "./ErrorComp";
 import { connect } from "react-redux";
 import {
   addName,
@@ -141,8 +142,7 @@ class Board extends Component {
 
   // function to handle the user's swipe of a name
   animateSwipe = (e, x, y) => {
-    const noIndicator = document.getElementById("no");
-    const yesIndicator = document.getElementById("yes");
+    const topCard = document.getElementById("card-top");
 
     this.setState({ x: -e.deltaX });
     this.setState({ direction: e.dir });
@@ -151,19 +151,16 @@ class Board extends Component {
     this.setState({ opacity: 1 - Math.abs(this.state.x) / 520 });
 
     if (e.deltaX >= 100) {
-      noIndicator.style.visibility = "visible";
+      topCard.style.background = "#f57075";
     } else if (e.deltaX <= -100) {
-      yesIndicator.style.visibility = "visible";
+      topCard.style.background = "#48D1CC";
     } else {
-      noIndicator.style.visibility = "hidden";
-      yesIndicator.style.visibility = "hidden";
+      topCard.style.background = "";
     }
   };
 
   handleSwipe = e => {
-    const noIndicator = document.getElementById("no");
-    const yesIndicator = document.getElementById("yes");
-
+    const topCard = document.getElementById("card-top");
     if (e.deltaX >= 100 || e.deltaX <= -100) {
       e.dir === "Right" ? this.swipedYes() : this.swipedNo();
     }
@@ -172,8 +169,7 @@ class Board extends Component {
     this.setState({ x: 0 });
     this.setState({ rotation: 0 });
     this.setState({ opacity: 1 });
-    noIndicator.style.visibility = "hidden";
-    yesIndicator.style.visibility = "hidden";
+    topCard.style.background = "";
   };
 
   selectGender = e => {
@@ -196,7 +192,7 @@ class Board extends Component {
   render() {
     return this.state.error ? (
       <div className="content">
-        <div>{this.state.error}</div>
+        <Error errorMessage={this.state.error} />
       </div>
     ) : this.state.loading ? (
       <div className="content">
@@ -218,7 +214,8 @@ class Board extends Component {
             onSwiped={data => this.handleSwipe(data)}
           >
             <div
-              className="name-card card-top"
+              className="name-card"
+              id="card-top"
               style={{
                 transform:
                   "translateX(" +
@@ -229,12 +226,6 @@ class Board extends Component {
                 opacity: this.state.opacity
               }}
             >
-              <div className="indicator" id="no">
-                <div className="indicator-inner">Nope</div>
-              </div>
-              <div className="indicator" id="yes">
-                <div className="indicator-inner">Yes</div>
-              </div>
               {this.state.namesStack[this.state.namesStack.length - 1]}
             </div>
           </Swipeable>
