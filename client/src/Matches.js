@@ -4,30 +4,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { connect } from "react-redux";
 import { deleteNameByName, findMatches } from "./actions/userActions";
 import Loader from "react-loader-spinner";
+import { Redirect } from "react-router-dom";
 
 class Matches extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  // add addEventListener
   componentDidMount() {
     if (this.props.state.isAuthenticated && this.props.state.user.linkedID) {
       this.props.findMatches();
     }
   }
 
+  componentDidUpdate = prevProps => {
+    if (this.props.state.matches !== prevProps.state.matches) {
+      this.forceUpdate();
+    }
+  };
+
   //Delete a name from the list
   deleteName = name => {
     // Update Database
-    console.log("delete: " + name);
     this.props.deleteNameByName(
       this.props.state.user._id,
       name,
       this.props.state.user.names
     );
-    this.forceUpdate();
   };
 
   renderListItems = () => {
@@ -76,11 +75,7 @@ class Matches extends Component {
         </div>
       );
     } else if (!this.props.state.isAuthenticated) {
-      return (
-        <div className="content">
-          <h1>Log in to see your matches</h1>
-        </div>
-      );
+      return <Redirect to="/Login" />;
     } else {
       return (
         <div className="content">

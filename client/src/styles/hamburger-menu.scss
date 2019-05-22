@@ -1,7 +1,6 @@
 @import "./variables";
 
 .clickable-area {
-  // position: absolute;
   width: 60px;
   height: 55px;
   z-index: 3;
@@ -43,14 +42,14 @@
   span:nth-child(4) {
     top: 1.6em;
   }
-  &.isopen span:nth-child(1),
-  &.isopen span:nth-child(4) {
+  &.is-open span:nth-child(1),
+  &.is-open span:nth-child(4) {
     opacity: 0;
   }
-  &.isopen span:nth-child(2) {
+  &.is-open span:nth-child(2) {
     transform: rotate(45deg);
   }
-  &.isopen span:nth-child(3) {
+  &.is-open span:nth-child(3) {
     transform: rotate(-45deg);
   }
 }

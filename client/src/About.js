@@ -1,6 +1,6 @@
 import React from "react";
 
-function About(props) {
+const About = props => {
   return (
     <div className="content home">
       <div className="demo-text">
@@ -11,6 +11,7 @@ function About(props) {
         </p>
         <p>Easily swipe the names in the "Board" section of this app</p>
         <p>Link your account to your partner and find name matches</p>
+        <h3>How-To</h3>
         <ul>
           <li>Register and go to the section "Account"</li>
           <li>
@@ -25,11 +26,10 @@ function About(props) {
         </ul>
         <h3>Contact</h3>
         <p>Questions? Feedback? Just mail us:</p>
-
-        <p>sara.bongartz@gmail.com</p>
+        <p>baby.name.matches@gmail.com</p>
       </div>
     </div>
   );
-}
+};
 
 export default About;

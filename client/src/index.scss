@@ -59,7 +59,6 @@ h3 {
   border: none;
   background-color: inherit;
   color: inherit;
-  display: none;
   cursor: pointer;
   font-size: $font-big;
   outline: none;
@@ -147,7 +146,6 @@ a {
   margin: 20px auto;
   background-color: $accent_light;
   border-radius: 30px;
-  //border: 1px solid white;
 }
 
 .toggle-button {
@@ -163,15 +161,6 @@ a {
 
 .selected {
   background-color: black;
-}
-
-// demo / home page
-#myVideo {
-  width: 200px;
-}
-.demo-text,
-.demo-video {
-  margin: 30px;
 }
 
 @media screen and (max-width: 450px) {

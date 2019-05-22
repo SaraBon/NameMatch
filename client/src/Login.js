@@ -6,14 +6,11 @@ import { loginUser } from "./actions/userActions";
 import { clearErrors } from "./actions/userActions";
 
 class Login extends Component {
-  constructor() {
-    super();
-    this.state = {
-      email: "",
-      password: "",
-      errors: {}
-    };
-  }
+  state = {
+    email: "",
+    password: "",
+    errors: {}
+  };
 
   // clear the validation errors when the user navigates away from this route
   componentWillUnmount() {
@@ -29,7 +26,7 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password
     };
-    this.props.loginUser(userData); ///-------------
+    this.props.loginUser(userData);
   };
 
   // render errors, if there are

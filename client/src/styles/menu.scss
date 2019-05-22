@@ -11,7 +11,8 @@
   z-index: 2;
   transform: translateX(-120%);
   transition: transform 300ms;
-  &.isopen {
+  border-right: 1px solid #2f323d;
+  &.is-open {
     transform: none;
   }
 

@@ -97,18 +97,14 @@ export const registerUser = userData => dispatch => {
 //load the names list of the linked friend
 export const getFriendsNames = friendsID => dispatch => {
   dispatch(setUserLoading());
-  axios
-    .get(`/users/get/${friendsID}`)
-    .then(res => {
-      let friendsNames = res.data.names;
+  axios.get(`/users/get/${friendsID}`).then(res => {
+    let friendsNames = res.data.names;
 
-      dispatch({
-        type: UPDATE_FRIENDS_NAMES,
-        payload: friendsNames
-      });
-    })
-
-    .catch(err => console.log(err));
+    dispatch({
+      type: UPDATE_FRIENDS_NAMES,
+      payload: friendsNames
+    });
+  });
 };
 
 //set USER_LOADING
@@ -154,6 +150,13 @@ export const deleteName = (userID, index) => dispatch => {
       dispatch({
         type: UPDATE_NAMES,
         payload: res.data.names
+      });
+    })
+    .then(res => {
+      //as this function is used in the context of the matches component
+      //we now recalculate the matches
+      dispatch({
+        type: FIND_MATCHES
       });
     })
     .catch(err => {
@@ -281,29 +284,7 @@ export const deleteAccount = userID => dispatch => {
 export const deleteNameByName = (userID, name, usersNames) => dispatch => {
   // find the name's index in the user's name list
   const index = usersNames.indexOf(name);
+  //delete it from the user's list
 
   dispatch(deleteName(userID, index));
-  //delete it from the user's list
-  axios
-    .post(`/users/delete/${userID}`, { index: index })
-    .then(res => {
-      dispatch({
-        type: UPDATE_NAMES,
-        payload: res.data.names
-      });
-      //as this function is used in the context of the matches component
-      //we now recalculate the matches
-    })
-    .then(() => {
-      dispatch({
-        type: FIND_MATCHES
-      });
-    })
-    .catch(err => {
-      dispatch({
-        type: DELETE_ERRORS,
-        payload: err.response.data
-      });
-      toast.error(`${err.response.data.error}`);
-    });
 };

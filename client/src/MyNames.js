@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "react-loader-spinner";
+import { Redirect } from "react-router-dom";
 
 import { connect } from "react-redux";
 import { deleteName } from "./actions/userActions";
@@ -53,15 +54,11 @@ class MyNames extends Component {
         </div>
       );
     } else if (!this.props.state.isAuthenticated) {
-      return (
-        <div className="content">
-          <h1>Log in to see your list of names</h1>
-        </div>
-      );
+      return <Redirect to="/Login" />;
     } else {
       return (
         <div className="content">
-          <h1>Oups</h1>
+          <h1>Oups, try again</h1>
         </div>
       );
     }
@@ -78,20 +75,3 @@ export default connect(
   mapStateToProps,
   { deleteName }
 )(MyNames);
-
-// TEMPORARILY DISABLED ANIMATION
-// resetListAnimationClass() {
-//   // let list = document.getElementsByClassName("slide");
-//   // for (let i = 0; i < list.length; i++) {
-//   //   if (list[i].classList.contains("slide")) {
-//   //     list[i].classList.remove("slide");
-//   //   }
-//   // }
-//   // for (let i = 0; i < list.length; i++) {
-//   //   if (list[i].classList.contains("slideDelete")) {
-//   //     list[i].classList.remove("slideDelete");
-//   //   }
-//   // }
-//   //now set the state with the names saved in the temp variable (so that animation is finished before we update and rerender the names list)
-//   //  this.setState({ namesList: this.state.tempList });
-// }

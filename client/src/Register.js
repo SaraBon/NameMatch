@@ -54,7 +54,10 @@ class Register extends Component {
             <h3>Register below</h3>
             <p className="">Already have an account?</p>
             <p className="link">
-              <Link to="/login"> Log in here</Link>
+              <Link to="/login" style={{ color: "white" }}>
+                {" "}
+                Log in here
+              </Link>
             </p>
           </div>
           <form noValidate onSubmit={this.onSubmit}>

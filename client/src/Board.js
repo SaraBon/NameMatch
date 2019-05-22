@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { Swipeable } from "react-swipeable";
 import Error from "./ErrorComp";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   addName,
   getFriendsNames,
@@ -19,25 +21,24 @@ let selectedStyle = {
 };
 
 class Board extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      namesStack: [],
-      unseenFriendsNames: [],
-      error: false,
-      loading: true,
-      // for swipe animation & toggle buttons
-      x: 0,
-      rotation: 0,
-      opacity: 1,
-      direction: "",
-      gender: "all"
-    };
-  }
+  state = {
+    namesStack: [],
+    unseenFriendsNames: [],
+    nameCount: 0,
+    error: false,
+    loading: true,
+    // for swipe animation & toggle buttons
+    x: 0,
+    rotation: 0,
+    opacity: 1,
+    direction: "",
+    showYesIcon: false,
+    showYesIcon: false,
+    gender: "all"
+  };
 
   componentDidMount() {
     this.getNames();
-
     // if a user is logged in and has a linked friend who has names
     // calculate the friend's names which the current user hasn't seen yet
     if (this.props.state.friendsNames.length > 0) {
@@ -47,39 +48,22 @@ class Board extends Component {
 
   //get new random names and push them to the name stack
   getNames = async gender => {
-    let namesStackTemp;
-    // if the function is called because the gender was changed,
-    // the current name stack is emptied, otherwise kept
-    if (gender) {
-      namesStackTemp = [];
-    } else {
-      namesStackTemp = [...this.state.namesStack];
-    }
-
-    //if the current user's friend has names on his list which the current user
-    //has not yes seen, add the first name of the unseen names to the stack
-    if (this.props.state.isAuthenticated && this.props.state.unseenNames) {
-      if (this.props.state.unseenNames.length > 0) {
-        //get the fist name of the array of unseen friends names
-        let unseenName = this.props.state.unseenNames[0];
-        //push it into the name stack to be shown to the current user
-        namesStackTemp.unshift(unseenName);
-        //add that name to the database of seen names of the current user
-        this.props.addSeenName(this.props.state.user._id, unseenName);
-        //remove that name from the store state of unseen names
-        this.props.updateUnseenNames();
-      }
-    }
-
-    //get 6 more names from the database
+    this.setState({ loading: true });
+    let namesStackTemp = [];
+    //get more names from the database
     axios
       .get(`/names/get/${gender || this.state.gender}`)
       .then(res => {
         let names = res.data;
-        names.forEach(x => {
-          namesStackTemp.unshift(x.name);
-          this.setState({ namesStack: namesStackTemp });
-          return;
+        names.forEach(name => {
+          namesStackTemp.unshift(name.name);
+
+          return namesStackTemp;
+        });
+      })
+      .then(res => {
+        this.setState({
+          namesStack: [...this.state.namesStack, ...namesStackTemp]
         });
       })
       .then(res => {
@@ -92,28 +76,52 @@ class Board extends Component {
       });
   };
 
+  injectFriendsName = () => {
+    //get the fist name of the array of unseen friends names
+    const unseenName = this.props.state.unseenNames[0];
+    //push it to the end of the name stack to be shown to the current user
+    this.setState({
+      namesStack: [...this.state.namesStack, unseenName]
+    });
+    //add that name to the database of seen names of the current user
+    this.props.addSeenName(this.props.state.user._id, unseenName);
+    //remove that name from the store of unseen names
+    this.props.updateUnseenNames();
+  };
+
   // remove the currently displayed name from the stack
   removeName = () => {
-    console.log(this.state.namesStack);
     let namesStackTemp = [...this.state.namesStack];
     namesStackTemp.splice(-1, 1);
-    this.setState({ namesStack: namesStackTemp });
+    this.setState(
+      {
+        namesStack: namesStackTemp,
+        nameCount: (this.state.nameCount += 1)
+      },
+      () => {
+        // every 10th swipe, inject a friend's name and set back the count
+        if (
+          this.state.nameCount === 10 &&
+          this.props.state.unseenNames &&
+          this.props.state.unseenNames.length > 0
+        ) {
+          this.injectFriendsName();
+          this.setState({ nameCount: 0 });
+        }
 
-    //check if the namesStack has less then 2 entries and if so, add new names to it
-    if (this.state.namesStack.length <= 2) {
-      this.getNames();
-    }
+        //check if the namesStack has less then 2 entries and if so, add new names to it
+        this.state.namesStack.length === 0 && this.getNames();
+      }
+    );
   };
 
   // when user "likes" the name
   swipedYes = () => {
-    console.log("yes!");
     //check if the liked name is a match
     this.checkForMatch();
 
     //if the user is logged in, add the name to the user's list
     if (this.props.state.isAuthenticated) {
-      console.log(this.props.state.user.names);
       this.props.addName(
         this.props.state.user._id,
         this.state.namesStack[this.state.namesStack.length - 1]
@@ -125,7 +133,6 @@ class Board extends Component {
 
   // when user "dislikes" the name
   swipedNo = () => {
-    console.log("no!");
     this.removeName();
   };
 
@@ -142,44 +149,47 @@ class Board extends Component {
 
   // function to handle the user's swipe of a name
   animateSwipe = (e, x, y) => {
-    const topCard = document.getElementById("card-top");
+    this.setState({
+      x: -e.deltaX,
+      direction: e.dir,
+      rotation: -e.deltaX / 10,
+      opacity: 1 - Math.abs(this.state.x) / 520
+    });
 
-    this.setState({ x: -e.deltaX });
-    this.setState({ direction: e.dir });
-
-    this.setState({ rotation: -e.deltaX / 10 });
-    this.setState({ opacity: 1 - Math.abs(this.state.x) / 520 });
-
-    if (e.deltaX >= 100) {
-      topCard.style.background = "#f57075";
-    } else if (e.deltaX <= -100) {
-      topCard.style.background = "#48D1CC";
+    if (e.deltaX >= 90) {
+      this.setState({ showNoIcon: true });
+    } else if (e.deltaX <= -90) {
+      this.setState({ showYesIcon: true });
     } else {
-      topCard.style.background = "";
+      this.setState({ showNoIcon: false, showYesIcon: false });
     }
   };
 
   handleSwipe = e => {
     const topCard = document.getElementById("card-top");
-    if (e.deltaX >= 100 || e.deltaX <= -100) {
+    if (e.deltaX >= 90 || e.deltaX <= -90) {
       e.dir === "Right" ? this.swipedYes() : this.swipedNo();
     }
 
     // when a swipe ends, reset all css animation & style
-    this.setState({ x: 0 });
-    this.setState({ rotation: 0 });
-    this.setState({ opacity: 1 });
+    this.setState({
+      x: 0,
+      rotation: 0,
+      opacity: 1,
+      showYesIcon: false,
+      showNoIcon: false
+    });
     topCard.style.background = "";
   };
 
   selectGender = e => {
+    e.persist();
     this.setState({ gender: e.target.value });
-    this.getNames(e.target.value);
+    this.setState({ namesStack: [] }, () => this.getNames(e.target.value));
   };
 
   renderCards = () => {
     const { namesStack } = this.state;
-
     return namesStack.map((item, i) => {
       return (
         <div key={i} className="name-card">
@@ -226,6 +236,26 @@ class Board extends Component {
                 opacity: this.state.opacity
               }}
             >
+              <div
+                style={{
+                  opacity: this.state.showYesIcon ? "1" : "0",
+                  position: "absolute",
+                  left: "50%",
+                  top: "50px"
+                }}
+              >
+                <FontAwesomeIcon icon="laugh-beam" />
+              </div>
+              <div
+                style={{
+                  opacity: this.state.showNoIcon ? "1" : "0",
+                  position: "absolute",
+                  left: "50%",
+                  top: "50px"
+                }}
+              >
+                <FontAwesomeIcon icon="meh" />
+              </div>
               {this.state.namesStack[this.state.namesStack.length - 1]}
             </div>
           </Swipeable>
